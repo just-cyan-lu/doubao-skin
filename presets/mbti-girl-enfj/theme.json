@@ -5,7 +5,7 @@
   "name": "ENFJ · 主人公女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(236, 232, 217, 0.66)",
+    "conversation": "rgba(236, 232, 217, 0.60)",
     "menu": "rgba(236, 232, 217, 0.94)"
   },
   "decoration": {

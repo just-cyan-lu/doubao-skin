@@ -5,7 +5,7 @@
   "name": "ESFJ · 执政官男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(241, 244, 247, 0.66)",
+    "conversation": "rgba(241, 244, 247, 0.60)",
     "menu": "rgba(241, 244, 247, 0.94)"
   },
   "decoration": {

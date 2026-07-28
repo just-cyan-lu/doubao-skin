@@ -5,7 +5,7 @@
   "name": "INFJ · 提倡者男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(238, 240, 232, 0.66)",
+    "conversation": "rgba(238, 240, 232, 0.60)",
     "menu": "rgba(238, 240, 232, 0.94)"
   },
   "decoration": {

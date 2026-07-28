@@ -9,7 +9,7 @@
   --doubao-skin-panel: rgba(255, 255, 255, 0.64);
   --doubao-skin-panel-strong: rgba(255, 255, 255, 0.84);
   --doubao-skin-line: rgba(79, 70, 130, 0.13);
-  --doubao-skin-conversation-scrim: rgba(255, 255, 255, 0.66);
+  --doubao-skin-conversation-scrim: rgba(255, 255, 255, 0.60);
   --doubao-skin-menu-background: rgba(255, 255, 255, 0.94);
   --doubao-skin-text-primary: #252338;
   --doubao-skin-text-secondary: #57546a;
@@ -690,6 +690,15 @@
 
 :root[data-doubao-skin="active"] [data-testid="chat-route-layout"] a {
   color: var(--doubao-skin-text-link);
+}
+
+:root[data-doubao-skin="active"]
+  [data-testid="message_content"]
+  [data-testid="message_text_content"]
+  li
+  > span {
+  color: var(--doubao-skin-text-primary) !important;
+  -webkit-text-fill-color: var(--doubao-skin-text-primary) !important;
 }
 
 :root[data-doubao-skin="active"] ::selection {

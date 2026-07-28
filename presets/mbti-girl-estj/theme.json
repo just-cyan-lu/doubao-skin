@@ -5,7 +5,7 @@
   "name": "ESTJ · 总经理女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(238, 241, 243, 0.66)",
+    "conversation": "rgba(238, 241, 243, 0.60)",
     "menu": "rgba(238, 241, 243, 0.94)"
   },
   "decoration": {

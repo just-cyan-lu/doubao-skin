@@ -12,7 +12,7 @@ $script:StateRoot = Join-Path $env:LOCALAPPDATA "DoubaoSkin"
 $script:ThemesRoot = Join-Path $script:StateRoot "themes"
 $script:ConfigPath = Join-Path $script:StateRoot "config.json"
 $script:StatePath = Join-Path $script:StateRoot "state.json"
-$script:ThemeLibraryMarkerPath = Join-Path $script:StateRoot "bundled-theme-library-v2"
+$script:ThemeLibraryMarkerPath = Join-Path $script:StateRoot "bundled-theme-library-v3"
 $script:WatcherLogPath = Join-Path $script:StateRoot "injector.log"
 $script:WatcherErrorLogPath = Join-Path $script:StateRoot "injector-error.log"
 $script:ManagerErrorLogPath = Join-Path $script:StateRoot "manager-error.log"
@@ -566,7 +566,7 @@ function Get-DoubaoSkinConversationOpacity {
             return ConvertTo-DoubaoSkinConversationOpacity -Value $property.Value
         }
     }
-    return [double]0.66
+    return [double]0.60
 }
 
 function Write-DoubaoSkinConfig {

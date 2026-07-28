@@ -5,7 +5,7 @@
   "name": "INFP · 调停者女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(243, 239, 229, 0.66)",
+    "conversation": "rgba(243, 239, 229, 0.60)",
     "menu": "rgba(243, 239, 229, 0.94)"
   },
   "decoration": {

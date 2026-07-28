@@ -5,7 +5,7 @@
   "name": "INTJ · 建筑师男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(44, 41, 54, 0.76)",
+    "conversation": "rgba(44, 41, 54, 0.60)",
     "menu": "rgba(44, 41, 54, 0.96)"
   },
   "decoration": {

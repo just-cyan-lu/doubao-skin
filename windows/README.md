@@ -105,10 +105,11 @@ off the visible list during upgrades.
   without `-Background`, so its window and taskbar button are visible after
   login. Clearing the checkbox removes the value without stopping the current
   manager or skin session.
-- The **Conversation mask opacity** slider persists `conversationOpacity` in
-  `config.json` and replaces only the alpha of the selected theme's
-  `surfaces.conversation` color; it does not tint the home view, menus, or
-  composer.
+- The **Conversation transparency** slider shows `0%` as fully masked and
+  `100%` as fully transparent, with a `40%` built-in default. The manager
+  persists its inverse as `conversationOpacity` in `config.json` and replaces
+  only the alpha of the selected theme's `surfaces.conversation` color; it
+  does not tint the home view, menus, or composer.
 - Disabling and restoring the official appearance also clears the login-start
   preference and removes the startup value.
 - A separate signed-PowerShell event supervisor blocks on WMI process-start

@@ -5,7 +5,7 @@
   "name": "ESTP · 企业家女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(52, 50, 46, 0.76)",
+    "conversation": "rgba(52, 50, 46, 0.60)",
     "menu": "rgba(52, 50, 46, 0.96)"
   },
   "decoration": {

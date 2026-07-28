@@ -5,7 +5,7 @@
   "name": "ENTP · 辩论家男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(239, 235, 242, 0.66)",
+    "conversation": "rgba(239, 235, 242, 0.60)",
     "menu": "rgba(239, 235, 242, 0.94)"
   },
   "decoration": {

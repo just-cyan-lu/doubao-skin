@@ -217,7 +217,7 @@ async function inspectTheme(sourceArgument) {
     conversationOpacity: colorOpacity(
       inspected.theme.surfaces?.conversation
         ?? inspected.theme.colors.panelStrong
-        ?? "rgba(255, 255, 255, 0.66)",
+        ?? "rgba(255, 255, 255, 0.60)",
     ),
     revision: loaded.revision,
   };

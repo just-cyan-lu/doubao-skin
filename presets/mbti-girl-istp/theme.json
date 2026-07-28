@@ -5,7 +5,7 @@
   "name": "ISTP · 鉴赏家女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(55, 53, 48, 0.76)",
+    "conversation": "rgba(55, 53, 48, 0.60)",
     "menu": "rgba(55, 53, 48, 0.96)"
   },
   "decoration": {

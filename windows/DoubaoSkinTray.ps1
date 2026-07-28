@@ -39,7 +39,7 @@ $script:operationFailureTitle = ""
 $script:exiting = $false
 $script:balloonShown = $false
 $script:updatingStartup = $false
-$script:updatingOpacity = $false
+$script:updatingTransparency = $false
 
 function Format-Ui {
     param([string]$Template, [object[]]$Values)
@@ -387,14 +387,16 @@ function Update-Status {
     } finally {
         $script:updatingStartup = $false
     }
-    $script:updatingOpacity = $true
+    $script:updatingTransparency = $true
     try {
-        $opacityPercent = [Math]::Round(
-            [Math]::Max(0, [Math]::Min(1, [double]$script:status.conversationOpacity)) * 100)
-        $conversationOpacitySlider.Value = [int]$opacityPercent
-        $conversationOpacityValue.Text = "$opacityPercent%"
+        $transparencyPercent = [Math]::Round(
+            (1 - [Math]::Max(
+                0,
+                [Math]::Min(1, [double]$script:status.conversationOpacity))) * 100)
+        $conversationTransparencySlider.Value = [int]$transparencyPercent
+        $conversationTransparencyValue.Text = "$transparencyPercent%"
     } finally {
-        $script:updatingOpacity = $false
+        $script:updatingTransparency = $false
     }
     if ([bool]$script:status.enabled) {
         $statusTitle.Text = if ([bool]$script:status.skinActive) { $strings.skinApplied } else { $strings.persistentEnabled }
@@ -409,7 +411,7 @@ function Update-Status {
     }
     $disableButton.Enabled = -not $script:operation -and [bool]$script:status.enabled
     $startupCheckBox.Enabled = -not $script:operation -and [bool]$script:status.enabled
-    $conversationOpacitySlider.Enabled = -not $script:operation -and [bool]$script:status.enabled
+    $conversationTransparencySlider.Enabled = -not $script:operation -and [bool]$script:status.enabled
     Update-ApplyButton
 }
 
@@ -436,7 +438,7 @@ function Set-Busy {
     $openDoubaoButton.Enabled = -not $Value
     $disableButton.Enabled = -not $Value -and $null -ne $script:status -and [bool]$script:status.enabled
     $startupCheckBox.Enabled = -not $Value -and $null -ne $script:status -and [bool]$script:status.enabled
-    $conversationOpacitySlider.Enabled = -not $Value -and $null -ne $script:status -and [bool]$script:status.enabled
+    $conversationTransparencySlider.Enabled = -not $Value -and $null -ne $script:status -and [bool]$script:status.enabled
     $applyButton.Enabled = -not $Value -and $null -ne $script:selectedTheme
     $form.UseWaitCursor = $Value
 }
@@ -579,28 +581,28 @@ $disableButton = New-Object Windows.Forms.Button
 $disableButton.Text = $strings.disable
 $disableButton.SetBounds(389, 50, 130, 38)
 
-$conversationOpacityLabel = New-Object Windows.Forms.Label
-$conversationOpacityLabel.Text = $strings.conversationOpacity
-$conversationOpacityLabel.ForeColor = [Drawing.Color]::FromArgb(66, 85, 69)
-$conversationOpacityLabel.SetBounds(22, 101, 122, 24)
+$conversationTransparencyLabel = New-Object Windows.Forms.Label
+$conversationTransparencyLabel.Text = $strings.conversationTransparency
+$conversationTransparencyLabel.ForeColor = [Drawing.Color]::FromArgb(66, 85, 69)
+$conversationTransparencyLabel.SetBounds(22, 101, 122, 24)
 
-$conversationOpacitySlider = New-Object Windows.Forms.TrackBar
-$conversationOpacitySlider.Minimum = 0
-$conversationOpacitySlider.Maximum = 100
-$conversationOpacitySlider.TickFrequency = 10
-$conversationOpacitySlider.SmallChange = 1
-$conversationOpacitySlider.LargeChange = 10
-$conversationOpacitySlider.Value = 66
-$conversationOpacitySlider.Enabled = $false
-$conversationOpacitySlider.SetBounds(145, 91, 620, 44)
-$conversationOpacitySlider.Anchor = [Windows.Forms.AnchorStyles]::Top -bor [Windows.Forms.AnchorStyles]::Left -bor [Windows.Forms.AnchorStyles]::Right
+$conversationTransparencySlider = New-Object Windows.Forms.TrackBar
+$conversationTransparencySlider.Minimum = 0
+$conversationTransparencySlider.Maximum = 100
+$conversationTransparencySlider.TickFrequency = 10
+$conversationTransparencySlider.SmallChange = 1
+$conversationTransparencySlider.LargeChange = 10
+$conversationTransparencySlider.Value = 40
+$conversationTransparencySlider.Enabled = $false
+$conversationTransparencySlider.SetBounds(145, 91, 620, 44)
+$conversationTransparencySlider.Anchor = [Windows.Forms.AnchorStyles]::Top -bor [Windows.Forms.AnchorStyles]::Left -bor [Windows.Forms.AnchorStyles]::Right
 
-$conversationOpacityValue = New-Object Windows.Forms.Label
-$conversationOpacityValue.Text = "66%"
-$conversationOpacityValue.TextAlign = [Drawing.ContentAlignment]::MiddleRight
-$conversationOpacityValue.ForeColor = [Drawing.Color]::FromArgb(66, 85, 69)
-$conversationOpacityValue.SetBounds(776, 101, 70, 24)
-$conversationOpacityValue.Anchor = [Windows.Forms.AnchorStyles]::Top -bor [Windows.Forms.AnchorStyles]::Right
+$conversationTransparencyValue = New-Object Windows.Forms.Label
+$conversationTransparencyValue.Text = "40%"
+$conversationTransparencyValue.TextAlign = [Drawing.ContentAlignment]::MiddleRight
+$conversationTransparencyValue.ForeColor = [Drawing.Color]::FromArgb(66, 85, 69)
+$conversationTransparencyValue.SetBounds(776, 101, 70, 24)
+$conversationTransparencyValue.Anchor = [Windows.Forms.AnchorStyles]::Top -bor [Windows.Forms.AnchorStyles]::Right
 
 $copyrightLabel = New-Object Windows.Forms.Label
 $copyrightLabel.Text = $strings.copyrightNotice
@@ -623,9 +625,9 @@ $footer.Controls.AddRange(@(
     $applyButton,
     $openDoubaoButton,
     $disableButton,
-    $conversationOpacityLabel,
-    $conversationOpacitySlider,
-    $conversationOpacityValue,
+    $conversationTransparencyLabel,
+    $conversationTransparencySlider,
+    $conversationTransparencyValue,
     $copyrightLabel,
     $projectLink))
 $form.Controls.Add($themeList)
@@ -650,32 +652,32 @@ $operationTimer = New-Object Windows.Forms.Timer
 $operationTimer.Interval = 250
 $operationTimer.Add_Tick({ Complete-BackendOperation })
 
-$opacityTimer = New-Object Windows.Forms.Timer
-$opacityTimer.Interval = 450
-$opacityTimer.Add_Tick({
-    $opacityTimer.Stop()
-    if ($script:updatingOpacity -or
+$transparencyTimer = New-Object Windows.Forms.Timer
+$transparencyTimer.Interval = 450
+$transparencyTimer.Add_Tick({
+    $transparencyTimer.Stop()
+    if ($script:updatingTransparency -or
         $null -ne $script:operation -or
         $null -eq $script:status -or
         -not [bool]$script:status.enabled) {
         return
     }
-    $opacity = ([double]$conversationOpacitySlider.Value / 100).ToString(
+    $opacity = (1 - ([double]$conversationTransparencySlider.Value / 100)).ToString(
         "0.00",
         [Globalization.CultureInfo]::InvariantCulture)
     [void](Start-BackendOperation `
         -Arguments @("set-conversation-opacity", "-ConversationOpacity", $opacity) `
-        -Progress $strings.conversationOpacityChanging `
+        -Progress $strings.conversationTransparencyChanging `
         -Reload $true)
 })
-$conversationOpacitySlider.Add_ValueChanged({
-    $conversationOpacityValue.Text = "$($conversationOpacitySlider.Value)%"
-    if (-not $script:updatingOpacity -and
+$conversationTransparencySlider.Add_ValueChanged({
+    $conversationTransparencyValue.Text = "$($conversationTransparencySlider.Value)%"
+    if (-not $script:updatingTransparency -and
         $null -eq $script:operation -and
         $null -ne $script:status -and
         [bool]$script:status.enabled) {
-        $opacityTimer.Stop()
-        $opacityTimer.Start()
+        $transparencyTimer.Stop()
+        $transparencyTimer.Start()
     }
 })
 
@@ -807,7 +809,7 @@ try {
     [Windows.Forms.Application]::Run($form)
 } finally {
     $operationTimer.Stop()
-    $opacityTimer.Stop()
+    $transparencyTimer.Stop()
     if ($null -ne $themeList.LargeImageList) {
         $themeList.LargeImageList.Dispose()
     }

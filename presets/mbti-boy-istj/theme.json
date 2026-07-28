@@ -5,7 +5,7 @@
   "name": "ISTJ · 物流师男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(237, 240, 242, 0.66)",
+    "conversation": "rgba(237, 240, 242, 0.60)",
     "menu": "rgba(237, 240, 242, 0.94)"
   },
   "decoration": {

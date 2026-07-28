@@ -102,7 +102,7 @@ function generatedTheme(sourceTheme, gender, type) {
     name: sourceTheme.name,
     background: "background.jpg",
     surfaces: {
-      conversation: rgba(dark ? palette.panel : palette.panel, dark ? 0.76 : 0.66),
+      conversation: rgba(palette.panel, 0.60),
       menu: rgba(palette.panel, dark ? 0.96 : 0.94),
     },
     decoration: {

@@ -5,7 +5,7 @@
   "name": "ESFP · 表演者男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(244, 238, 227, 0.66)",
+    "conversation": "rgba(244, 238, 227, 0.60)",
     "menu": "rgba(244, 238, 227, 0.94)"
   },
   "decoration": {

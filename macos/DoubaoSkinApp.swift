@@ -122,7 +122,7 @@ final class SkinViewModel: ObservableObject {
     @Published private(set) var status: SkinStatus?
     @Published private(set) var themes: [ThemeSummary] = []
     @Published var selectedTheme: ThemeSummary?
-    @Published var conversationOpacity = 0.66
+    @Published var conversationTransparency = 0.40
     @Published private(set) var invalidThemeCount = 0
     @Published private(set) var libraryDirectory = ""
     @Published var message = "正在读取主题库和状态…"
@@ -133,8 +133,8 @@ final class SkinViewModel: ObservableObject {
     var enabled: Bool { status?.enabled == true }
     var canApply: Bool { selectedTheme != nil && !busy }
     var selectedThemeName: String { selectedTheme?.name ?? "未选择主题" }
-    var conversationOpacityPercent: Int {
-        Int((conversationOpacity * 100).rounded())
+    var conversationTransparencyPercent: Int {
+        Int((conversationTransparency * 100).rounded())
     }
 
     var statusTitle: String {
@@ -253,16 +253,17 @@ final class SkinViewModel: ObservableObject {
         }
     }
 
-    func commitConversationOpacity() {
+    func commitConversationTransparency() {
         guard enabled, !busy else { return }
-        let normalized = min(1, max(0, conversationOpacity))
-        conversationOpacity = normalized
+        let normalized = min(1, max(0, conversationTransparency))
+        conversationTransparency = normalized
+        let opacity = 1 - normalized
         let value = String(
             format: "%.2f",
             locale: Locale(identifier: "en_US_POSIX"),
-            normalized
+            opacity
         )
-        runOperation(progress: "正在调整对话页蒙版…") {
+        runOperation(progress: "正在调整对话页蒙版透明度…") {
             try await SkinManager.run([
                 "set-conversation-opacity", "--conversation-opacity", value,
             ])
@@ -301,7 +302,10 @@ final class SkinViewModel: ObservableObject {
         invalidThemeCount = latestLibrary.invalid.count
         libraryDirectory = latestLibrary.directory
         status = latestStatus
-        conversationOpacity = min(1, max(0, latestStatus.conversationOpacity))
+        conversationTransparency = min(
+            1,
+            max(0, 1 - latestStatus.conversationOpacity)
+        )
 
         let activeTheme = latestLibrary.themes.first {
             if let themeDir = latestStatus.themeDir {
@@ -511,26 +515,26 @@ struct ContentView: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 HStack {
-                    Label("对话页蒙版不透明度", systemImage: "square.stack.3d.up.fill")
+                    Label("对话页蒙版透明度", systemImage: "square.stack.3d.up.fill")
                         .font(.subheadline.weight(.semibold))
                     Spacer()
-                    Text("\(model.conversationOpacityPercent)%")
+                    Text("\(model.conversationTransparencyPercent)%")
                         .font(.system(.subheadline, design: .monospaced).weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
                 Slider(
-                    value: $model.conversationOpacity,
+                    value: $model.conversationTransparency,
                     in: 0...1,
                     step: 0.01,
                     onEditingChanged: { editing in
                         if !editing {
-                            model.commitConversationOpacity()
+                            model.commitConversationTransparency()
                         }
                     }
                 )
                 .disabled(!model.enabled || model.busy)
-                .accessibilityLabel("对话页蒙版不透明度")
-                Text("只影响有聊天内容时覆盖在背景图上的阅读蒙版；首页、菜单和发送框不变。")
+                .accessibilityLabel("对话页蒙版透明度")
+                Text("0% 完全遮挡，100% 完全透明；只影响有聊天内容时的阅读蒙版，不会增加模糊。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

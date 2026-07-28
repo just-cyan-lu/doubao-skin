@@ -4,7 +4,7 @@
   "id": "replace-with-theme-id",
   "name": "Replace with theme name",
   "surfaces": {
-    "conversation": "rgba(250, 249, 244, 0.66)",
+    "conversation": "rgba(250, 249, 244, 0.60)",
     "menu": "rgba(252, 251, 247, 0.94)"
   },
   "decoration": {

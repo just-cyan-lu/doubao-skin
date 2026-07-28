@@ -257,8 +257,8 @@ function Activate-LibraryTheme {
     Start-DoubaoSkinEventSupervisor | Out-Null
     if ($OpacityChange) {
         Write-Output (
-            "Conversation mask opacity: {0}%" -f
-            [Math]::Round($conversationOpacityValue * 100))
+            "Conversation transparency: {0}%" -f
+            [Math]::Round((1 - $conversationOpacityValue) * 100))
     } else {
         Write-Output "Theme enabled: $($Theme.name)"
     }
@@ -271,7 +271,7 @@ function Disable-DoubaoSkin {
     $themeDirValue = ""
     $themeIdValue = ""
     $themeNameValue = ""
-    $conversationOpacityValue = [double]0.66
+    $conversationOpacityValue = [double]0.60
     if ($null -ne $config) {
         if ($null -ne $config.port) { $portValue = [int]$config.port }
         if ($null -ne $config.themeDir) { $themeDirValue = [string]$config.themeDir }
@@ -370,7 +370,7 @@ function Get-DoubaoSkinStatusJson {
     $themeIdValue = $null
     $themeNameValue = $null
     $startAtLogin = $false
-    $conversationOpacityValue = [double]0.66
+    $conversationOpacityValue = [double]0.60
     if ($null -ne $config) {
         $enabled = [bool]$config.enabled
         $startAtLogin = Get-DoubaoSkinStartAtLogin -Config $config

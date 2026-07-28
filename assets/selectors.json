@@ -91,6 +91,12 @@
       "required": false
     },
     {
+      "key": "conversation-message-content",
+      "selector": "[data-testid=\"message_text_content\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
       "key": "conversation-surface",
       "selector": "main:has([data-testid=\"message-list\"])",
       "tier": "L2",

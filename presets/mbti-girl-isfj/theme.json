@@ -5,7 +5,7 @@
   "name": "ISFJ · 守卫者女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(242, 245, 247, 0.66)",
+    "conversation": "rgba(242, 245, 247, 0.60)",
     "menu": "rgba(242, 245, 247, 0.94)"
   },
   "decoration": {

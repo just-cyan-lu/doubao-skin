@@ -22,7 +22,7 @@ official Doubao renderer over loopback CDP
 The default Aurora theme lives at `assets/theme.json`. Reusable presets live
 under `presets/`. Start new work by copying `presets/_template/theme.json`.
 `presets/bundled-themes.json` is the explicit release catalog installed into a
-user's theme library once per catalog revision. Version 2 contains the 32
+user's theme library once per catalog revision. Version 3 contains the 32
 `mbti-<gender>-<type>` themes plus `cyan-sunny`, and defaults to
 `mbti-boy-infp`.
 The platform managers scan one fixed library:
@@ -149,20 +149,23 @@ when an inner white layer still covers it.
 Conversation text requires a separate readability layer. The shared CSS uses
 `main:has([data-testid="message-list"])` so `surfaces.conversation` covers the
 entire main area only on real conversation routes; the home artwork remains
-unmasked. Start around alpha `0.66`. The conversation surface must use
+unmasked. Start around alpha `0.60`, which the manager displays as `40%`
+transparency. The conversation surface must use
 `backdrop-filter: none`: it may soften the artwork through opacity, but must
 not blur the message content or wallpaper. Doubao also adds a white bottom fade with
 the semantic class fragment `from-s-color-bg-body`; the skin rebuilds that fade
 from the same conversation token so it cannot become a detached white strip.
 Menus use `surfaces.menu`; start around alpha `0.94` for readable labels.
 
-`surfaces.conversation` 的 alpha 是主题首次启用时的默认值。两个平台管理器还提供
-`0%`–`100%` 的“对话页蒙版不透明度”用户覆盖，并把规范化后的
+`surfaces.conversation` 的 alpha 是主题首次启用时的默认值。两个平台管理器提供
+`0%`–`100%` 的“对话页蒙版透明度”控制：`0%` 表示完全遮挡，`100%` 表示
+完全透明，内置主题默认 `40%`。管理器按
+`conversationOpacity = 1 - conversationTransparency` 换算，并把规范化后的
 `conversationOpacity` 持久化到平台配置。注入器只替换
 `surfaces.conversation` 的 alpha，保留主题定义的 RGB；菜单、首页与发送框均不受
-影响。`0.00` 表示完全透明，`1.00` 表示完全不透明。监督器、一次注入和验证命令
-必须使用同一个覆盖值，且对话蒙版始终保持 `backdrop-filter: none`，不得因滑块
-引入模糊。
+影响。内部不透明度 `0.00` 表示完全透明，`1.00` 表示完全遮挡。监督器、一次注入
+和验证命令必须使用同一个内部覆盖值，且对话蒙版始终保持
+`backdrop-filter: none`，不得因滑块引入模糊。
 
 ## 3. Create a theme package
 
@@ -311,7 +314,7 @@ npm run build:app
   --theme-dir "$HOME/Library/Application Support/DoubaoSkin/themes/<id>"
 # Manager-equivalent user override; persists in config.plist.
 ./scripts/manage-doubao-skin-macos.sh set-conversation-opacity \
-  --conversation-opacity 0.66
+  --conversation-opacity 0.60
 # Quit Doubao, launch it normally from Dock/Finder, then verify:
 ./scripts/manage-doubao-skin-macos.sh verify
 ```
@@ -324,7 +327,7 @@ Windows packaging and persistence check:
 & "$env:LOCALAPPDATA\Programs\Doubao Skin\runtime\scripts\manage-doubao-skin-windows.ps1" verify
 # Manager-equivalent user override; persists in config.json.
 & "$env:LOCALAPPDATA\Programs\Doubao Skin\runtime\scripts\manage-doubao-skin-windows.ps1" `
-  set-conversation-opacity -ConversationOpacity 0.66
+  set-conversation-opacity -ConversationOpacity 0.60
 ```
 
 The default archive must contain root-level `Install Doubao Skin.cmd`,

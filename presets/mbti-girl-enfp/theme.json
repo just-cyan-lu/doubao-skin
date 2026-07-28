@@ -5,7 +5,7 @@
   "name": "ENFP · 竞选者女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(236, 232, 216, 0.66)",
+    "conversation": "rgba(236, 232, 216, 0.60)",
     "menu": "rgba(236, 232, 216, 0.94)"
   },
   "decoration": {

@@ -183,8 +183,8 @@ namespace DoubaoSkin
         private readonly Button refreshButton;
         private readonly Button openLibraryButton;
         private readonly CheckBox startupCheckBox;
-        private readonly TrackBar conversationOpacitySlider;
-        private readonly Label conversationOpacityValue;
+        private readonly TrackBar conversationTransparencySlider;
+        private readonly Label conversationTransparencyValue;
         private ThemeLibrary library;
         private SkinStatus status;
         private ThemeSummary selectedTheme;
@@ -192,7 +192,7 @@ namespace DoubaoSkin
         private bool exitRequested;
         private bool balloonShown;
         private bool updatingStartup;
-        private bool updatingOpacity;
+        private bool updatingTransparency;
 
         public SkinManagerForm(bool startHiddenValue)
         {
@@ -348,41 +348,41 @@ namespace DoubaoSkin
             };
             disableButton.Click += async delegate { await DisableSkinAsync(); };
 
-            Label conversationOpacityLabel = new Label();
-            conversationOpacityLabel.Text = "对话页蒙版不透明度";
-            conversationOpacityLabel.ForeColor = Color.FromArgb(66, 85, 69);
-            conversationOpacityLabel.SetBounds(22, 101, 122, 24);
+            Label conversationTransparencyLabel = new Label();
+            conversationTransparencyLabel.Text = "对话页蒙版透明度";
+            conversationTransparencyLabel.ForeColor = Color.FromArgb(66, 85, 69);
+            conversationTransparencyLabel.SetBounds(22, 101, 122, 24);
 
-            conversationOpacitySlider = new TrackBar();
-            conversationOpacitySlider.Minimum = 0;
-            conversationOpacitySlider.Maximum = 100;
-            conversationOpacitySlider.TickFrequency = 10;
-            conversationOpacitySlider.SmallChange = 1;
-            conversationOpacitySlider.LargeChange = 10;
-            conversationOpacitySlider.Value = 66;
-            conversationOpacitySlider.Enabled = false;
-            conversationOpacitySlider.SetBounds(145, 91, 600, 44);
-            conversationOpacitySlider.Anchor =
+            conversationTransparencySlider = new TrackBar();
+            conversationTransparencySlider.Minimum = 0;
+            conversationTransparencySlider.Maximum = 100;
+            conversationTransparencySlider.TickFrequency = 10;
+            conversationTransparencySlider.SmallChange = 1;
+            conversationTransparencySlider.LargeChange = 10;
+            conversationTransparencySlider.Value = 40;
+            conversationTransparencySlider.Enabled = false;
+            conversationTransparencySlider.SetBounds(145, 91, 600, 44);
+            conversationTransparencySlider.Anchor =
                 AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
-            conversationOpacityValue = new Label();
-            conversationOpacityValue.Text = "66%";
-            conversationOpacityValue.TextAlign = ContentAlignment.MiddleRight;
-            conversationOpacityValue.ForeColor = Color.FromArgb(66, 85, 69);
-            conversationOpacityValue.SetBounds(756, 101, 70, 24);
-            conversationOpacityValue.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            conversationOpacitySlider.ValueChanged += delegate
+            conversationTransparencyValue = new Label();
+            conversationTransparencyValue.Text = "40%";
+            conversationTransparencyValue.TextAlign = ContentAlignment.MiddleRight;
+            conversationTransparencyValue.ForeColor = Color.FromArgb(66, 85, 69);
+            conversationTransparencyValue.SetBounds(756, 101, 70, 24);
+            conversationTransparencyValue.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            conversationTransparencySlider.ValueChanged += delegate
             {
-                conversationOpacityValue.Text =
-                    conversationOpacitySlider.Value.ToString(CultureInfo.InvariantCulture) + "%";
+                conversationTransparencyValue.Text =
+                    conversationTransparencySlider.Value.ToString(CultureInfo.InvariantCulture) + "%";
             };
-            conversationOpacitySlider.MouseUp += async delegate
+            conversationTransparencySlider.MouseUp += async delegate
             {
-                await ApplyConversationOpacityAsync();
+                await ApplyConversationTransparencyAsync();
             };
-            conversationOpacitySlider.KeyUp += async delegate
+            conversationTransparencySlider.KeyUp += async delegate
             {
-                await ApplyConversationOpacityAsync();
+                await ApplyConversationTransparencyAsync();
             };
 
             Label copyright = new Label();
@@ -407,9 +407,9 @@ namespace DoubaoSkin
             footer.Controls.Add(applyButton);
             footer.Controls.Add(openDoubaoButton);
             footer.Controls.Add(disableButton);
-            footer.Controls.Add(conversationOpacityLabel);
-            footer.Controls.Add(conversationOpacitySlider);
-            footer.Controls.Add(conversationOpacityValue);
+            footer.Controls.Add(conversationTransparencyLabel);
+            footer.Controls.Add(conversationTransparencySlider);
+            footer.Controls.Add(conversationTransparencyValue);
             footer.Controls.Add(copyright);
             footer.Controls.Add(projectLink);
 
@@ -759,16 +759,16 @@ namespace DoubaoSkin
                 true);
         }
 
-        private async Task ApplyConversationOpacityAsync()
+        private async Task ApplyConversationTransparencyAsync()
         {
-            if (updatingOpacity || busy || status == null || !status.enabled)
+            if (updatingTransparency || busy || status == null || !status.enabled)
             {
                 return;
             }
-            string opacity = ((double)conversationOpacitySlider.Value / 100)
+            string opacity = (1 - ((double)conversationTransparencySlider.Value / 100))
                 .ToString("0.00", CultureInfo.InvariantCulture);
             await RunOperationAsync(
-                "正在调整对话页蒙版…",
+                "正在调整对话页蒙版透明度…",
                 new[] {
                     "set-conversation-opacity",
                     "-ConversationOpacity",
@@ -835,7 +835,7 @@ namespace DoubaoSkin
             openDoubaoButton.Enabled = !value;
             disableButton.Enabled = !value && status != null && status.enabled;
             startupCheckBox.Enabled = !value && status != null && status.enabled;
-            conversationOpacitySlider.Enabled =
+            conversationTransparencySlider.Enabled =
                 !value && status != null && status.enabled;
             applyButton.Enabled = !value && selectedTheme != null;
             if (!string.IsNullOrWhiteSpace(message))
@@ -862,18 +862,18 @@ namespace DoubaoSkin
             {
                 updatingStartup = false;
             }
-            updatingOpacity = true;
+            updatingTransparency = true;
             try
             {
-                int opacityPercent = (int)Math.Round(
-                    Math.Max(0, Math.Min(1, status.conversationOpacity)) * 100);
-                conversationOpacitySlider.Value = opacityPercent;
-                conversationOpacityValue.Text =
-                    opacityPercent.ToString(CultureInfo.InvariantCulture) + "%";
+                int transparencyPercent = (int)Math.Round(
+                    (1 - Math.Max(0, Math.Min(1, status.conversationOpacity))) * 100);
+                conversationTransparencySlider.Value = transparencyPercent;
+                conversationTransparencyValue.Text =
+                    transparencyPercent.ToString(CultureInfo.InvariantCulture) + "%";
             }
             finally
             {
-                updatingOpacity = false;
+                updatingTransparency = false;
             }
             if (status.enabled)
             {
@@ -891,7 +891,7 @@ namespace DoubaoSkin
             }
             disableButton.Enabled = !busy && status.enabled;
             startupCheckBox.Enabled = !busy && status.enabled;
-            conversationOpacitySlider.Enabled = !busy && status.enabled;
+            conversationTransparencySlider.Enabled = !busy && status.enabled;
             UpdateApplyButton();
         }
 

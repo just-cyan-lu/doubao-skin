@@ -69,9 +69,9 @@ test("argument parsing is explicit and bounded", () => {
 
 test("conversation scrim opacity override preserves its theme color", async () => {
   assert.equal(colorOpacity("#fefcf7"), 1);
-  assert.equal(colorOpacity("rgba(250, 248, 240, 0.66)"), 0.66);
+  assert.equal(colorOpacity("rgba(250, 248, 240, 0.60)"), 0.6);
   assert.equal(
-    colorWithOpacity("rgba(250, 248, 240, 0.66)", 0.42),
+    colorWithOpacity("rgba(250, 248, 240, 0.60)", 0.42),
     "rgba(250, 248, 240, 0.42)",
   );
   const defaultPayload = await buildPayload({ preset: "mbti-boy-infp" });
@@ -79,8 +79,8 @@ test("conversation scrim opacity override preserves its theme color", async () =
     conversationOpacity: 0.42,
     preset: "mbti-boy-infp",
   });
-  assert.equal(defaultPayload.themeDefaultConversationOpacity, 0.66);
-  assert.equal(overridden.themeDefaultConversationOpacity, 0.66);
+  assert.equal(defaultPayload.themeDefaultConversationOpacity, 0.6);
+  assert.equal(overridden.themeDefaultConversationOpacity, 0.6);
   assert.equal(overridden.conversationOpacity, 0.42);
   assert.equal(overridden.theme.surfaces.conversation, "rgba(250, 248, 240, 0.42)");
   assert.equal(overridden.theme.surfaces.menu, defaultPayload.theme.surfaces.menu);
@@ -146,7 +146,7 @@ test("payload is deterministic, self-contained, and syntactically valid", async 
   }
   assert.doesNotThrow(() => new Function(first.payload));
   assert.equal(first.selectors.selectors.filter((entry) => entry.required).length, 3);
-  assert.equal(first.selectors.selectors.length, 21);
+  assert.equal(first.selectors.selectors.length, 22);
   assert.ok(first.selectors.selectors.some((entry) => entry.key === "composer-surface"));
   assert.ok(first.selectors.selectors.some((entry) => entry.key === "composer-mode-select"));
   assert.ok(first.selectors.selectors.some((entry) => entry.key === "mode-select-menu"));
@@ -204,7 +204,7 @@ test("INFP preset embeds its bundled wallpaper and exact decoration copy", async
   );
   assert.equal(loaded.theme.composer.background, "rgba(255, 255, 255, 0.58)");
   assert.equal(loaded.theme.composer.backgroundAccent, loaded.theme.composer.background);
-  assert.equal(loaded.theme.surfaces.conversation, "rgba(250, 248, 240, 0.66)");
+  assert.equal(loaded.theme.surfaces.conversation, "rgba(250, 248, 240, 0.60)");
   assert.equal(loaded.theme.surfaces.menu, "rgba(250, 248, 240, 0.94)");
   assert.equal(loaded.theme.typography.primary, "#314539");
   assert.equal(loaded.theme.typography.sidebar, "#344b3a");
@@ -228,7 +228,7 @@ test("the complete MBTI collection is valid, unique, and has exact icon filters"
     "utf8",
   ));
   assert.equal(bundled.schema, "doubao-skin-bundled-themes/1");
-  assert.equal(bundled.revision, 2);
+  assert.equal(bundled.revision, 3);
   assert.equal(bundled.defaultTheme, "mbti-boy-infp");
   assert.equal(bundled.themes.length, 33);
   assert.equal(bundled.themes.includes("cyan-sunny"), true);
@@ -273,7 +273,7 @@ test("the Lu Siyuan warm-study preset preserves its artwork and semantic palette
     solveIconFilter(loaded.theme.composer.toolbar).filter,
   );
   assert.equal(loaded.theme.composer.background, "rgba(255, 252, 247, 0.58)");
-  assert.equal(loaded.theme.surfaces.conversation, "rgba(250, 245, 237, 0.66)");
+  assert.equal(loaded.theme.surfaces.conversation, "rgba(250, 245, 237, 0.60)");
   assert.equal(loaded.theme.surfaces.menu, "rgba(252, 248, 242, 0.95)");
   assert.ok(loaded.backgroundBytes > 800_000);
   assert.match(loaded.payload, /"mime":"image\/jpeg"/);
@@ -370,7 +370,7 @@ test("theme packages install as a validated JSON and background pair", async (co
   assert.equal(library.schema, "doubao-skin-theme-library/1");
   assert.equal(library.themes.length, 1);
   assert.equal(library.themes[0].id, "mbti-boy-infp");
-  assert.equal(library.themes[0].conversationOpacity, 0.66);
+  assert.equal(library.themes[0].conversationOpacity, 0.6);
   assert.equal(
     library.themes[0].backgroundPath,
     path.join(installed.directory, sourceTheme.background),
@@ -399,7 +399,7 @@ test("bundled theme seeding installs once without overwriting valid user edits",
     themes,
   ], { encoding: "utf8" }));
   assert.equal(first.schema, "doubao-skin-bundled-seed/1");
-  assert.equal(first.revision, 2);
+  assert.equal(first.revision, 3);
   assert.equal(first.defaultTheme, "mbti-boy-infp");
   assert.equal(first.installed.length, 33);
   assert.equal(first.preserved.length, 0);
@@ -446,7 +446,7 @@ test("macOS theme library seeds the bundled collection once and respects deletio
   assert.equal(first.themes.some(({ id }) => id === "cyan-sunny"), true);
   assert.equal(first.themes.some(({ id }) => id === "infp-garden"), false);
   assert.equal(
-    await fs.readFile(path.join(stateRoot, "bundled-theme-library-v2"), "utf8"),
+    await fs.readFile(path.join(stateRoot, "bundled-theme-library-v3"), "utf8"),
     "1\n",
   );
 
@@ -506,7 +506,7 @@ test("macOS theme library seeds the bundled collection once and respects deletio
   );
   assert.equal(
     await fs.readFile(
-      path.join(migratedState, "bundled-theme-library-v2"),
+      path.join(migratedState, "bundled-theme-library-v3"),
       "utf8",
     ),
     "1\n",
@@ -651,6 +651,7 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
     /main:has\(\[data-testid="message-list"\]\)[^}]*backdrop-filter: none !important/s,
   );
   assert.match(css, /from-s-color-bg-body.*doubao-skin-conversation-scrim/s);
+  assert.match(css, /message_text_content[\s\S]*doubao-skin-text-primary/);
   assert.match(agentInstructions, /docs\/THEME-AUTHORING\.md/);
   assert.match(authoringGuide, /nativeBlackTextCount/);
   assert.match(authoringGuide, /actionButtons\.unexpectedFilledCount/);
@@ -671,7 +672,7 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
   assert.match(managerScript, /conversationOpacity -float/);
   assert.match(managerScript, /THEME_LIBRARY_MARKER/);
   assert.match(managerScript, /seed "\$PROJECT_ROOT\/presets" "\$THEMES_ROOT"/);
-  assert.match(macCommon, /bundled-theme-library-v2/);
+  assert.match(macCommon, /bundled-theme-library-v3/);
   assert.doesNotMatch(
     managerScript,
     /\[\s*!\s+-e\s+"\$THEMES_ROOT\/infp-garden"\s*\]/,
@@ -685,6 +686,9 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
   assert.match(swiftApp, /activate-library/);
   assert.match(swiftApp, /list-themes/);
   assert.match(swiftApp, /set-conversation-opacity/);
+  assert.match(swiftApp, /@Published var conversationTransparency = 0\.40/);
+  assert.match(swiftApp, /let opacity = 1 - normalized/);
+  assert.match(swiftApp, /1 - latestStatus\.conversationOpacity/);
   assert.doesNotMatch(swiftApp, /NSOpenPanel|选择主题文件夹/);
   assert.match(infoPlist, /<key>LSUIElement<\/key>\s*<true\/>/);
   assert.match(infoPlist, /<key>CFBundleIconFile<\/key>\s*<string>DoubaoSkin\.icns<\/string>/);
@@ -766,9 +770,11 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(managerScript, /Get-ObservedNormalDoubaoMain/);
   assert.match(managerScript, /-NormalLaunchProcessId \$ObservedProcessId/);
   assert.match(managerScript, /set-conversation-opacity/);
-  assert.match(trayScript, /conversationOpacitySlider/);
-  assert.match(nativeManager, /conversationOpacitySlider/);
-  assert.equal(strings.conversationOpacity, "对话页蒙版不透明度");
+  assert.match(trayScript, /conversationTransparencySlider/);
+  assert.match(nativeManager, /conversationTransparencySlider/);
+  assert.match(trayScript, /1 - \(\[double\]\$conversationTransparencySlider\.Value \/ 100\)/);
+  assert.match(nativeManager, /1 - \(\(double\)conversationTransparencySlider\.Value \/ 100\)/);
+  assert.equal(strings.conversationTransparency, "对话页蒙版透明度");
   assert.match(managerScript, /ensure-supervisor/);
   assert.match(
     managerScript,
@@ -778,7 +784,7 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(managerScript, /list-themes/);
   assert.match(managerScript, /ThemeLibraryMarkerPath/);
   assert.match(managerScript, /@\("seed", \$source, \$script:ThemesRoot\)/);
-  assert.match(commonScript, /bundled-theme-library-v2/);
+  assert.match(commonScript, /bundled-theme-library-v3/);
   assert.match(managerScript, /enable-startup/);
   assert.match(managerScript, /disable-startup/);
   assert.match(managerScript, /startupRegistered/);
@@ -850,7 +856,8 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(packageInstaller, /-PackagePath \$packageRoot/);
   assert.match(packageCommand, /Install Doubao Skin\.ps1/);
   assert.match(packageReadme, /全部解压/);
-  assert.match(packageReadme, /对话页蒙版不透明度/);
+  assert.match(packageReadme, /对话页蒙版透明度/);
+  assert.match(packageReadme, /0% 完全遮挡，100% 完全透明，默认 40%/);
   assert.match(windowsGuide, /Smart App Control/);
   assert.match(windowsGuide, /no unconditional periodic relaunch check/i);
   assert.match(windowsGuide, /without `-Background`/);

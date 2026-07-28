@@ -5,7 +5,7 @@
   "name": "ENTJ · 指挥官女孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(48, 41, 54, 0.76)",
+    "conversation": "rgba(48, 41, 54, 0.60)",
     "menu": "rgba(48, 41, 54, 0.96)"
   },
   "decoration": {

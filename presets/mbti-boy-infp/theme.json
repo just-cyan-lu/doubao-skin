@@ -5,7 +5,7 @@
   "name": "INFP · 调停者男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(250, 248, 240, 0.66)",
+    "conversation": "rgba(250, 248, 240, 0.60)",
     "menu": "rgba(250, 248, 240, 0.94)"
   },
   "decoration": {

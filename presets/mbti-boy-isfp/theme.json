@@ -5,7 +5,7 @@
   "name": "ISFP · 探险家男孩",
   "background": "background.jpg",
   "surfaces": {
-    "conversation": "rgba(244, 238, 225, 0.66)",
+    "conversation": "rgba(244, 238, 225, 0.60)",
     "menu": "rgba(244, 238, 225, 0.94)"
   },
   "decoration": {

@@ -350,7 +350,7 @@ apply_theme_directory() {
   start_supervisor
   if [ -n "$requested_conversation_opacity" ]; then
     "$NODE" -e '
-      process.stdout.write(`对话页蒙版不透明度已调整为 ${Math.round(Number(process.argv[1]) * 100)}%。\n`);
+      process.stdout.write(`对话页蒙版透明度已调整为 ${Math.round((1 - Number(process.argv[1])) * 100)}%。\n`);
     ' "$conversation_opacity"
   else
     printf '已启用主题“%s”。豆包以后从 Dock 正常打开也会自动恢复皮肤。\n' "$theme_name"
@@ -438,10 +438,10 @@ disable_skin() {
   if [ -z "$conversation_opacity" ] && [ -d "$theme_dir" ]; then
     conversation_opacity="$("$NODE" -e '
       const value = Number(JSON.parse(process.argv[1]).conversationOpacity);
-      process.stdout.write(String(Number.isFinite(value) ? value : 0.66));
+      process.stdout.write(String(Number.isFinite(value) ? value : 0.60));
     ' "$(inspect_theme "$theme_dir" 2>/dev/null || printf '{}')")"
   fi
-  [ -n "$conversation_opacity" ] || conversation_opacity="0.66"
+  [ -n "$conversation_opacity" ] || conversation_opacity="0.60"
 
   stop_supervisor_job || fail "常驻进程未能安全停止。"
   stop_legacy_injector_job
@@ -514,10 +514,10 @@ print_status() {
   if [ -z "$conversation_opacity" ] && [ -d "$theme_dir" ]; then
     conversation_opacity="$("$NODE" -e '
       const value = Number(JSON.parse(process.argv[1]).conversationOpacity);
-      process.stdout.write(String(Number.isFinite(value) ? value : 0.66));
+      process.stdout.write(String(Number.isFinite(value) ? value : 0.60));
     ' "$(inspect_theme "$theme_dir" 2>/dev/null || printf '{}')")"
   fi
-  [ -n "$conversation_opacity" ] || conversation_opacity="0.66"
+  [ -n "$conversation_opacity" ] || conversation_opacity="0.60"
   doubao_interactive_is_running && running="true"
   case "$port" in
     ''|*[!0-9]*) ;;
