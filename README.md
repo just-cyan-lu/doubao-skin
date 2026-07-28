@@ -10,12 +10,12 @@
 
 ## 效果预览
 
-以下图片基于 macOS 豆包桌面端的实装截图制作，并已移除账号与聊天内容。
+以下图片基于 macOS 豆包桌面端的实装截图。
 
 <table>
   <tr>
-    <th width="50%">ENFP · 竞选者男孩</th>
-    <th width="50%">INFP · 调停者男孩</th>
+    <th width="50%">ENFP · 竞选者</th>
+    <th width="50%">INFP · 调停者</th>
   </tr>
   <tr>
     <td><img src="docs/images/previews/mbti-boy-enfp.png" alt="ENFP 竞选者男孩主题实装效果"></td>
