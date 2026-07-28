@@ -97,8 +97,9 @@ off the visible list during upgrades.
 
 ## Runtime behavior
 
-- Closing the PowerShell-hosted manager window hides it in the Windows system
-  tray.
+- While the PowerShell-hosted manager window is open, it owns a normal taskbar
+  button with the Doubao Skin icon. Closing the window hides that button and
+  leaves the manager in the Windows system tray.
 - Only **Exit Manager** in the tray menu ends the manager process.
 - The **Start automatically at login** checkbox persists in `config.json`.
   When selected, the current user's `Run` value launches the installed manager

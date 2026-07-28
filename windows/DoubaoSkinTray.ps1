@@ -15,6 +15,54 @@ $strings = [IO.File]::ReadAllText(
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class DoubaoSkinWindowInterop
+{
+    private const int GwlExStyle = -20;
+    private const long WsExAppWindow = 0x00040000L;
+    private const long WsExToolWindow = 0x00000080L;
+    private const int SwShow = 5;
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
+    private static extern int GetWindowLong32(IntPtr window, int index);
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW", SetLastError = true)]
+    private static extern IntPtr GetWindowLongPtr64(IntPtr window, int index);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
+    private static extern int SetWindowLong32(IntPtr window, int index, int value);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
+    private static extern IntPtr SetWindowLongPtr64(IntPtr window, int index, IntPtr value);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr window, int command);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr window);
+
+    public static void ShowTaskbarWindow(IntPtr window)
+    {
+        long style = IntPtr.Size == 8
+            ? GetWindowLongPtr64(window, GwlExStyle).ToInt64()
+            : GetWindowLong32(window, GwlExStyle);
+        style = (style | WsExAppWindow) & ~WsExToolWindow;
+        if (IntPtr.Size == 8)
+        {
+            SetWindowLongPtr64(window, GwlExStyle, new IntPtr(style));
+        }
+        else
+        {
+            SetWindowLong32(window, GwlExStyle, unchecked((int)style));
+        }
+        ShowWindow(window, SwShow);
+        SetForegroundWindow(window);
+    }
+}
+"@
 [Windows.Forms.Application]::EnableVisualStyles()
 
 $appIconPath = Join-Path $runtimeRoot "assets\DoubaoSkin.ico"
@@ -752,8 +800,17 @@ function Show-ManagerWindow {
     if ($form.WindowState -eq [Windows.Forms.FormWindowState]::Minimized) {
         $form.WindowState = [Windows.Forms.FormWindowState]::Normal
     }
+    [DoubaoSkinWindowInterop]::ShowTaskbarWindow($form.Handle)
+    $form.BringToFront()
     $form.Activate()
 }
+
+$startupVisibilityTimer = New-Object Windows.Forms.Timer
+$startupVisibilityTimer.Interval = 100
+$startupVisibilityTimer.Add_Tick({
+    $startupVisibilityTimer.Stop()
+    Show-ManagerWindow
+})
 
 $trayOpen.Add_Click({ Show-ManagerWindow })
 $trayIcon.Add_DoubleClick({ Show-ManagerWindow })
@@ -793,21 +850,32 @@ $form.Add_FormClosing({
 })
 
 $form.Add_Shown({
+    if ($Background) {
+        $form.Hide()
+        $form.ShowInTaskbar = $false
+    } else {
+        # Make the manager visible before any backend reconciliation. On some
+        # machines that operation can take several seconds during login.
+        Show-ManagerWindow
+    }
     Set-Busy -Value $true
     try {
         Invoke-BackendSync -Arguments @("ensure-supervisor") | Out-Null
     } catch {}
     Refresh-Data -PreferActive $true
-    if ($Background) {
-        $form.Hide()
-        $form.ShowInTaskbar = $false
-    }
     $operationTimer.Start()
 })
 
 try {
+    if (-not $Background) {
+        # This one-shot UI event runs only after the WinForms message loop is
+        # alive. It recovers from powershell.exe's hidden STARTUPINFO even
+        # when that state suppresses the form's first Shown event.
+        $startupVisibilityTimer.Start()
+    }
     [Windows.Forms.Application]::Run($form)
 } finally {
+    $startupVisibilityTimer.Stop()
     $operationTimer.Stop()
     $transparencyTimer.Stop()
     if ($null -ne $themeList.LargeImageList) {

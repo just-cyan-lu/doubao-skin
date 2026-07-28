@@ -806,6 +806,21 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(trayScript, /ensure-supervisor/);
   assert.match(trayScript, /Add_FormClosing/);
   assert.match(trayScript, /CloseReason\]::WindowsShutDown/);
+  assert.match(trayScript, /DoubaoSkinWindowInterop/);
+  assert.match(trayScript, /WsExAppWindow/);
+  assert.match(trayScript, /ShowTaskbarWindow\(\$form\.Handle\)/);
+  assert.match(
+    trayScript,
+    /startupVisibilityTimer[\s\S]*?Interval = 100[\s\S]*?Show-ManagerWindow/,
+  );
+  assert.match(
+    trayScript,
+    /if \(-not \$Background\)[\s\S]*?\$startupVisibilityTimer\.Start\(\)[\s\S]*?Application\]::Run/,
+  );
+  assert.match(
+    trayScript,
+    /if \(\$Background\)[\s\S]*?\$form\.ShowInTaskbar = \$false[\s\S]*?else \{[\s\S]*?Show-ManagerWindow/,
+  );
   assert.match(trayScript, /LargeImageList/);
   assert.match(trayScript, /startAtLogin/);
   assert.match(trayScript, /CheckedChanged/);
@@ -828,6 +843,8 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.doesNotMatch(trayScript, /FolderBrowserDialog|OpenFileDialog/);
   assert.doesNotMatch(trayScript, /Win32_ProcessStartTrace|lastFallback|AddSeconds\(15\)/);
   assert.match(nativeManager, /ensure-supervisor/);
+  assert.match(nativeManager, /WindowInterop\.ShowTaskbarWindow\(Handle\)/);
+  assert.match(nativeManager, /WsExAppWindow/);
   assert.doesNotMatch(
     nativeManager,
     /Win32_ProcessStartTrace|fallbackTimer|Interval = 15000/,
@@ -863,6 +880,7 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(windowsGuide, /without `-Background`/);
   assert.match(authoringGuide, /supervise-once -ObservedProcessId/);
   assert.match(agentInstructions, /restore periodic unconditional\s+supervision/);
+  assert.match(agentInstructions, /WS_EX_APPWINDOW/);
 });
 
 test("all macOS entry scripts pass Bash syntax validation", {
@@ -907,6 +925,7 @@ test("all Windows entry scripts pass PowerShell syntax validation on Windows", {
     "tests/windows-backend-process-regression.ps1",
     "tests/windows-lifecycle-regression.ps1",
     "tests/windows-manager-ui-regression.ps1",
+    "tests/audit-windows-manager-taskbar.ps1",
   ];
   for (const relative of files) {
     const absolute = path.join(root, relative).replaceAll("'", "''");

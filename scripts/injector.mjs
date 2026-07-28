@@ -10,7 +10,7 @@ const projectRoot = path.resolve(scriptDir, "..");
 const assetsRoot = path.join(projectRoot, "assets");
 const presetsRoot = path.join(projectRoot, "presets");
 
-export const SKIN_VERSION = "0.8.6";
+export const SKIN_VERSION = "0.8.7";
 export const RUNTIME_STATE_KEY = "__DOUBAO_SKIN_POC_RUNTIME__";
 export const MAX_BACKGROUND_BYTES = 16 * 1024 * 1024;
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);

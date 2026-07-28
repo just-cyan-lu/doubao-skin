@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -11,6 +12,53 @@ using System.Windows.Forms;
 
 namespace DoubaoSkin
 {
+    internal static class WindowInterop
+    {
+        private const int GwlExStyle = -20;
+        private const long WsExAppWindow = 0x00040000L;
+        private const long WsExToolWindow = 0x00000080L;
+        private const int SwShow = 5;
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
+        private static extern int GetWindowLong32(IntPtr window, int index);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW", SetLastError = true)]
+        private static extern IntPtr GetWindowLongPtr64(IntPtr window, int index);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
+        private static extern int SetWindowLong32(IntPtr window, int index, int value);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
+        private static extern IntPtr SetWindowLongPtr64(
+            IntPtr window,
+            int index,
+            IntPtr value);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr window, int command);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr window);
+
+        internal static void ShowTaskbarWindow(IntPtr window)
+        {
+            long style = IntPtr.Size == 8
+                ? GetWindowLongPtr64(window, GwlExStyle).ToInt64()
+                : GetWindowLong32(window, GwlExStyle);
+            style = (style | WsExAppWindow) & ~WsExToolWindow;
+            if (IntPtr.Size == 8)
+            {
+                SetWindowLongPtr64(window, GwlExStyle, new IntPtr(style));
+            }
+            else
+            {
+                SetWindowLong32(window, GwlExStyle, unchecked((int)style));
+            }
+            ShowWindow(window, SwShow);
+            SetForegroundWindow(window);
+        }
+    }
+
     internal sealed class SkinStatus
     {
         public string schema { get; set; }
@@ -448,6 +496,10 @@ namespace DoubaoSkin
                 {
                     Hide();
                     ShowInTaskbar = false;
+                }
+                else
+                {
+                    ShowManager();
                 }
                 try
                 {
@@ -967,6 +1019,7 @@ namespace DoubaoSkin
             {
                 WindowState = FormWindowState.Normal;
             }
+            WindowInterop.ShowTaskbarWindow(Handle);
             BringToFront();
             Activate();
         }

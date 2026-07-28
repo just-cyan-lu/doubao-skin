@@ -79,6 +79,11 @@ the GUI. The backend publishes the result through the atomic
 `RedirectStandardOutput` or `RedirectStandardError`: Doubao, the watcher, or
 the event supervisor may inherit those handles and leave the manager stuck in
 its busy state after a successful operation.
+The default PowerShell host starts with its console hidden. As soon as the
+non-background WinForms manager is shown, restore a normal `WS_EX_APPWINDOW`
+taskbar window and make it visible before running backend reconciliation.
+Closing with X must hide that taskbar window while leaving the tray process
+alive.
 The user workflow has one fixed library per platform:
 
 - macOS: `~/Library/Application Support/DoubaoSkin/themes/`
