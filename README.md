@@ -8,6 +8,21 @@
 
 当前版本：`0.8.7`。已针对豆包 `2.19.9`、Chromium `135.0.7049.72` 验证。
 
+## 效果预览
+
+以下图片基于 macOS 豆包桌面端的实装截图制作，并已移除账号与聊天内容。
+
+<table>
+  <tr>
+    <th width="50%">ENFP · 竞选者男孩</th>
+    <th width="50%">INFP · 调停者男孩</th>
+  </tr>
+  <tr>
+    <td><img src="docs/images/previews/mbti-boy-enfp.png" alt="ENFP 竞选者男孩主题实装效果"></td>
+    <td><img src="docs/images/previews/mbti-boy-infp.png" alt="INFP 调停者男孩主题实装效果"></td>
+  </tr>
+</table>
+
 ## 最简用法
 
 ### macOS
@@ -60,6 +75,16 @@ Set-ExecutionPolicy -Scope Process Bypass
 主题格式、选择器和 AI agent 修改规范见
 [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md) 与
 [`AGENTS.md`](AGENTS.md)。
+
+## 灵感与致谢
+
+Doubao Skin 在早期可行性探索和产品思路上受到
+[Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)
+启发，尤其参考了通过仅绑定本机回环地址的 CDP，在不修改官方应用包的前提下
+注入可恢复主题的实践。感谢 Fei-Away 及该项目的贡献者。
+
+本项目面向豆包重新实现了应用身份校验、macOS / Windows 管理器、主题契约与
+界面适配；两个项目互不隶属。
 
 ## 版权、搬运与售卖
 

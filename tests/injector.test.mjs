@@ -593,6 +593,31 @@ test("repository and release builders publish the AGPL legal notice", async () =
   assert.match(windowsPackageReadme, /完整条款见同目录 LICENSE/);
 });
 
+test("README credits its inspiration and publishes both privacy-safe theme previews", async () => {
+  const readme = await fs.readFile(path.join(root, "README.md"), "utf8");
+  const previewPaths = [
+    "docs/images/previews/mbti-boy-enfp.png",
+    "docs/images/previews/mbti-boy-infp.png",
+  ];
+
+  assert.match(
+    readme,
+    /\[Fei-Away\/Codex-Dream-Skin\]\(https:\/\/github\.com\/Fei-Away\/Codex-Dream-Skin\)/,
+  );
+  assert.match(readme, /两个项目互不隶属/);
+  assert.match(readme, /已移除账号与聊天内容/);
+
+  for (const relativePath of previewPaths) {
+    assert.match(readme, new RegExp(relativePath.replaceAll("/", "\\/")));
+    const preview = await fs.readFile(path.join(root, relativePath));
+    assert.equal(
+      preview.subarray(0, 8).toString("hex"),
+      "89504e470d0a1a0a",
+      relativePath,
+    );
+  }
+});
+
 test("repository ships a complete cross-platform AI-agent theme authoring contract", async () => {
   const [
     schemaText,
