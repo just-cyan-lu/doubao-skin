@@ -7,6 +7,7 @@ COMMAND="${1:-status}"
 [ "$#" -eq 0 ] || shift
 PORT=9451
 THEME_SOURCE=""
+CONVERSATION_OPACITY=""
 INSTALLED_MODE="false"
 
 while [ "$#" -gt 0 ]; do
@@ -14,6 +15,7 @@ while [ "$#" -gt 0 ]; do
     --installed) INSTALLED_MODE="true"; shift ;;
     --port) PORT="${2:-}"; shift 2 ;;
     --theme-dir) THEME_SOURCE="${2:-}"; shift 2 ;;
+    --conversation-opacity) CONVERSATION_OPACITY="${2:-}"; shift 2 ;;
     *) fail "未知参数：$1" ;;
   esac
 done
@@ -74,13 +76,16 @@ deploy_runtime() {
 
 DEPLOY_FOR_COMMAND="false"
 case "$COMMAND" in
-  enable|enable-default|activate-library|reapply) DEPLOY_FOR_COMMAND="true" ;;
+  enable|enable-default|activate-library|reapply|set-conversation-opacity)
+    DEPLOY_FOR_COMMAND="true"
+    ;;
 esac
 
 if [ "$DEPLOY_FOR_COMMAND" = "true" ] \
   && [ "$INSTALLED_MODE" = "false" ] \
   && [ "$PROJECT_ROOT" != "$INSTALL_ROOT" ]; then
   ORIGINAL_SOURCE="$THEME_SOURCE"
+  ORIGINAL_CONVERSATION_OPACITY="$CONVERSATION_OPACITY"
   if [ ! -x "$INSTALL_ROOT/scripts/manage-doubao-skin-macos.sh" ] \
     || [ ! -f "$PROJECT_ROOT/VERSION" ] \
     || [ ! -f "$INSTALL_ROOT/VERSION" ] \
@@ -89,10 +94,26 @@ if [ "$DEPLOY_FOR_COMMAND" = "true" ] \
   fi
   INSTALLED_ARGS=("$COMMAND" --installed --port "$PORT")
   [ -z "$ORIGINAL_SOURCE" ] || INSTALLED_ARGS+=(--theme-dir "$ORIGINAL_SOURCE")
+  [ -z "$ORIGINAL_CONVERSATION_OPACITY" ] \
+    || INSTALLED_ARGS+=(--conversation-opacity "$ORIGINAL_CONVERSATION_OPACITY")
   exec "$INSTALL_ROOT/scripts/manage-doubao-skin-macos.sh" "${INSTALLED_ARGS[@]}"
 fi
 
 require_node
+
+normalize_conversation_opacity() {
+  "$NODE" -e '
+    const value = Number(process.argv[1]);
+    if (!Number.isFinite(value) || value < 0 || value > 1) process.exit(1);
+    process.stdout.write(String(Number(value.toFixed(4))));
+  ' "$1"
+}
+
+if [ -n "$CONVERSATION_OPACITY" ]; then
+  CONVERSATION_OPACITY="$(
+    normalize_conversation_opacity "$CONVERSATION_OPACITY" 2>/dev/null
+  )" || fail "对话页蒙版不透明度必须在 0%–100% 之间。"
+fi
 
 config_value() {
   local key="$1"
@@ -106,6 +127,7 @@ write_config() {
   local theme_dir="$3"
   local theme_id="$4"
   local theme_name="$5"
+  local conversation_opacity="$6"
   local temporary="$CONFIG_PATH.tmp.$$"
   ensure_state_root
   /usr/bin/plutil -create xml1 "$temporary"
@@ -115,6 +137,7 @@ write_config() {
   /usr/bin/plutil -insert themeDir -string "$theme_dir" "$temporary"
   /usr/bin/plutil -insert themeId -string "$theme_id" "$temporary"
   /usr/bin/plutil -insert themeName -string "$theme_name" "$temporary"
+  /usr/bin/plutil -insert conversationOpacity -float "$conversation_opacity" "$temporary"
   /usr/bin/plutil -insert updatedAt -string "$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ')" "$temporary"
   /bin/chmod 600 "$temporary"
   /bin/mv "$temporary" "$CONFIG_PATH"
@@ -278,7 +301,11 @@ apply_theme_directory() {
   local theme_dir="$1"
   local theme_id="$2"
   local theme_name="$3"
+  local requested_conversation_opacity="${4:-}"
   local saved_port=""
+  local saved_conversation_opacity=""
+  local inspected_json=""
+  local conversation_opacity=""
 
   discover_doubao_app
   verify_doubao_signature
@@ -287,21 +314,47 @@ apply_theme_directory() {
     ''|*[!0-9]*) ;;
     *) PORT="$saved_port" ;;
   esac
+  conversation_opacity="$requested_conversation_opacity"
+  if [ -z "$conversation_opacity" ]; then
+    saved_conversation_opacity="$(
+      config_value conversationOpacity 2>/dev/null || true
+    )"
+    conversation_opacity="$(
+      normalize_conversation_opacity "$saved_conversation_opacity" 2>/dev/null || true
+    )"
+  fi
+  if [ -z "$conversation_opacity" ]; then
+    inspected_json="$(inspect_theme "$theme_dir")"
+    conversation_opacity="$("$NODE" -e '
+      const value = Number(JSON.parse(process.argv[1]).conversationOpacity);
+      if (!Number.isFinite(value) || value < 0 || value > 1) process.exit(1);
+      process.stdout.write(String(value));
+    ' "$inspected_json")" || fail "主题没有有效的对话页蒙版不透明度。"
+  fi
   if ! cdp_ready "$PORT" && ! port_is_available "$PORT"; then
     PORT="$(select_available_port "$PORT")" || fail "9451–9551 没有可用端口。"
   fi
 
   cleanup_legacy_runtime
   stop_supervisor_job || fail "旧的常驻进程未能安全停止。"
-  write_config true "$PORT" "$theme_dir" "$theme_id" "$theme_name"
+  write_config true "$PORT" "$theme_dir" "$theme_id" "$theme_name" \
+    "$conversation_opacity"
   ensure_skin_app_running "$PORT"
   "$NODE" "$INJECTOR" \
-    --once --port "$PORT" --theme-dir "$theme_dir" --timeout-ms 45000 >/dev/null
+    --once --port "$PORT" --theme-dir "$theme_dir" \
+    --conversation-opacity "$conversation_opacity" --timeout-ms 45000 >/dev/null
   "$NODE" "$INJECTOR" \
-    --verify --port "$PORT" --theme-dir "$theme_dir" --timeout-ms 20000 >/dev/null
+    --verify --port "$PORT" --theme-dir "$theme_dir" \
+    --conversation-opacity "$conversation_opacity" --timeout-ms 20000 >/dev/null
   write_active_state "$PORT" "$theme_dir" "$theme_id"
   start_supervisor
-  printf '已启用主题“%s”。豆包以后从 Dock 正常打开也会自动恢复皮肤。\n' "$theme_name"
+  if [ -n "$requested_conversation_opacity" ]; then
+    "$NODE" -e '
+      process.stdout.write(`对话页蒙版不透明度已调整为 ${Math.round(Number(process.argv[1]) * 100)}%。\n`);
+    ' "$conversation_opacity"
+  else
+    printf '已启用主题“%s”。豆包以后从 Dock 正常打开也会自动恢复皮肤。\n' "$theme_name"
+  fi
 }
 
 enable_theme() {
@@ -320,7 +373,8 @@ enable_theme() {
     'process.stdout.write(JSON.parse(process.argv[1]).id)' "$installed_json")"
   theme_name="$("$NODE" -e \
     'process.stdout.write(JSON.parse(process.argv[1]).name)' "$installed_json")"
-  apply_theme_directory "$theme_dir" "$theme_id" "$theme_name"
+  apply_theme_directory "$theme_dir" "$theme_id" "$theme_name" \
+    "$CONVERSATION_OPACITY"
 }
 
 activate_library_theme() {
@@ -347,7 +401,20 @@ activate_library_theme() {
     'process.stdout.write(JSON.parse(process.argv[1]).id)' "$inspected_json")"
   theme_name="$("$NODE" -e \
     'process.stdout.write(JSON.parse(process.argv[1]).name)' "$inspected_json")"
-  apply_theme_directory "$theme_dir" "$theme_id" "$theme_name"
+  apply_theme_directory "$theme_dir" "$theme_id" "$theme_name" \
+    "$CONVERSATION_OPACITY"
+}
+
+set_conversation_opacity() {
+  local enabled=""
+  local active_theme=""
+  [ -n "$CONVERSATION_OPACITY" ] \
+    || fail "请提供 0–1 之间的对话页蒙版不透明度。"
+  enabled="$(config_value enabled 2>/dev/null || true)"
+  [ "$enabled" = "true" ] || fail "请先启用一个主题。"
+  active_theme="$(config_value themeDir 2>/dev/null || true)"
+  [ -n "$active_theme" ] || fail "当前主题配置不完整。"
+  activate_library_theme "$active_theme"
 }
 
 disable_skin() {
@@ -355,12 +422,26 @@ disable_skin() {
   local theme_dir=""
   local theme_id=""
   local theme_name=""
+  local conversation_opacity=""
   discover_doubao_app
   verify_doubao_signature
   port="$(config_value port 2>/dev/null || true)"
   theme_dir="$(config_value themeDir 2>/dev/null || true)"
   theme_id="$(config_value themeId 2>/dev/null || true)"
   theme_name="$(config_value themeName 2>/dev/null || true)"
+  conversation_opacity="$(
+    config_value conversationOpacity 2>/dev/null || true
+  )"
+  conversation_opacity="$(
+    normalize_conversation_opacity "$conversation_opacity" 2>/dev/null || true
+  )"
+  if [ -z "$conversation_opacity" ] && [ -d "$theme_dir" ]; then
+    conversation_opacity="$("$NODE" -e '
+      const value = Number(JSON.parse(process.argv[1]).conversationOpacity);
+      process.stdout.write(String(Number.isFinite(value) ? value : 0.66));
+    ' "$(inspect_theme "$theme_dir" 2>/dev/null || printf '{}')")"
+  fi
+  [ -n "$conversation_opacity" ] || conversation_opacity="0.66"
 
   stop_supervisor_job || fail "常驻进程未能安全停止。"
   stop_legacy_injector_job
@@ -379,7 +460,8 @@ disable_skin() {
     stop_doubao || fail "豆包未能正常退出。"
     launch_doubao_normally
   fi
-  write_config false "${port:-9451}" "$theme_dir" "$theme_id" "$theme_name"
+  write_config false "${port:-9451}" "$theme_dir" "$theme_id" "$theme_name" \
+    "$conversation_opacity"
   remove_file_exact "$STATE_PATH"
   printf '皮肤常驻已停用，豆包已恢复官方启动方式。\n'
 }
@@ -411,6 +493,7 @@ print_status() {
   local theme_dir=""
   local theme_id=""
   local theme_name=""
+  local conversation_opacity=""
   local running="false"
   local skin_active="false"
   local supervisor_running="false"
@@ -422,6 +505,19 @@ print_status() {
   theme_dir="$(config_value themeDir 2>/dev/null || true)"
   theme_id="$(config_value themeId 2>/dev/null || true)"
   theme_name="$(config_value themeName 2>/dev/null || true)"
+  conversation_opacity="$(
+    config_value conversationOpacity 2>/dev/null || true
+  )"
+  conversation_opacity="$(
+    normalize_conversation_opacity "$conversation_opacity" 2>/dev/null || true
+  )"
+  if [ -z "$conversation_opacity" ] && [ -d "$theme_dir" ]; then
+    conversation_opacity="$("$NODE" -e '
+      const value = Number(JSON.parse(process.argv[1]).conversationOpacity);
+      process.stdout.write(String(Number.isFinite(value) ? value : 0.66));
+    ' "$(inspect_theme "$theme_dir" 2>/dev/null || printf '{}')")"
+  fi
+  [ -n "$conversation_opacity" ] || conversation_opacity="0.66"
   doubao_interactive_is_running && running="true"
   case "$port" in
     ''|*[!0-9]*) ;;
@@ -433,10 +529,11 @@ print_status() {
     *) supervisor_running="true" ;;
   esac
   "$NODE" - "$enabled" "$port" "$theme_dir" "$theme_id" "$theme_name" \
+    "$conversation_opacity" \
     "$running" "$skin_active" "$supervisor_running" "$DOUBAO_VERSION" \
     "$DOUBAO_BUNDLE" <<'NODE'
 const [
-  enabled, port, themeDir, themeId, themeName, running, skinActive,
+  enabled, port, themeDir, themeId, themeName, conversationOpacity, running, skinActive,
   supervisorRunning, doubaoVersion, doubaoBundle,
 ] = process.argv.slice(2);
 process.stdout.write(`${JSON.stringify({
@@ -446,6 +543,7 @@ process.stdout.write(`${JSON.stringify({
   themeDir: themeDir || null,
   themeId: themeId || null,
   themeName: themeName || null,
+  conversationOpacity: Number(conversationOpacity),
   running: running === "true",
   skinActive: skinActive === "true",
   supervisorRunning: supervisorRunning === "true",
@@ -469,6 +567,9 @@ case "$COMMAND" in
     ACTIVE_THEME="$(config_value themeDir 2>/dev/null || true)"
     activate_library_theme "$ACTIVE_THEME"
     ;;
+  set-conversation-opacity)
+    set_conversation_opacity
+    ;;
   disable)
     disable_skin
     ;;
@@ -488,11 +589,21 @@ case "$COMMAND" in
   verify)
     ACTIVE_PORT="$(config_value port 2>/dev/null || true)"
     ACTIVE_THEME="$(config_value themeDir 2>/dev/null || true)"
+    ACTIVE_CONVERSATION_OPACITY="$(
+      config_value conversationOpacity 2>/dev/null || true
+    )"
+    ACTIVE_CONVERSATION_OPACITY="$(
+      normalize_conversation_opacity "$ACTIVE_CONVERSATION_OPACITY" \
+        2>/dev/null || true
+    )"
+    [ -n "$ACTIVE_CONVERSATION_OPACITY" ] \
+      || fail "没有有效的对话页蒙版不透明度配置。"
     case "$ACTIVE_PORT" in
       ''|*[!0-9]*) fail "没有有效的皮肤配置。" ;;
     esac
     "$NODE" "$INJECTOR" \
-      --verify --port "$ACTIVE_PORT" --theme-dir "$ACTIVE_THEME" --timeout-ms 20000
+      --verify --port "$ACTIVE_PORT" --theme-dir "$ACTIVE_THEME" \
+      --conversation-opacity "$ACTIVE_CONVERSATION_OPACITY" --timeout-ms 20000
     ;;
   *) fail "未知命令：$COMMAND" ;;
 esac

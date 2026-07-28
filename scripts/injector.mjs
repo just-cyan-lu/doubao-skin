@@ -10,7 +10,7 @@ const projectRoot = path.resolve(scriptDir, "..");
 const assetsRoot = path.join(projectRoot, "assets");
 const presetsRoot = path.join(projectRoot, "presets");
 
-export const SKIN_VERSION = "0.8.3";
+export const SKIN_VERSION = "0.8.5";
 export const RUNTIME_STATE_KEY = "__DOUBAO_SKIN_POC_RUNTIME__";
 export const MAX_BACKGROUND_BYTES = 16 * 1024 * 1024;
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
@@ -22,6 +22,7 @@ const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, mil
 export function parseArgs(argv) {
   const options = {
     background: null,
+    conversationOpacity: null,
     mode: "watch",
     port: 9451,
     preset: null,
@@ -34,7 +35,9 @@ export function parseArgs(argv) {
     const argument = argv[index];
     if (argument === "--port") options.port = Number(argv[++index]);
     else if (argument === "--background") options.background = path.resolve(argv[++index]);
-    else if (argument === "--preset") options.preset = argv[++index] ?? "";
+    else if (argument === "--conversation-opacity") {
+      options.conversationOpacity = Number(argv[++index]);
+    } else if (argument === "--preset") options.preset = argv[++index] ?? "";
     else if (argument === "--theme-dir") options.themeDir = path.resolve(argv[++index]);
     else if (argument === "--timeout-ms") options.timeoutMs = Number(argv[++index]);
     else if (argument === "--screenshot") options.screenshot = path.resolve(argv[++index]);
@@ -51,6 +54,16 @@ export function parseArgs(argv) {
   }
   if (!Number.isFinite(options.timeoutMs) || options.timeoutMs < 250 || options.timeoutMs > 120000) {
     throw new Error(`Invalid timeout: ${options.timeoutMs}`);
+  }
+  if (
+    options.conversationOpacity !== null
+    && (
+      !Number.isFinite(options.conversationOpacity)
+      || options.conversationOpacity < 0
+      || options.conversationOpacity > 1
+    )
+  ) {
+    throw new Error(`Invalid conversation opacity: ${options.conversationOpacity}`);
   }
   if (options.preset !== null && !PRESET_ID.test(options.preset)) {
     throw new Error(`Invalid preset ID: ${options.preset || "<empty>"}`);
@@ -470,6 +483,49 @@ export function validateTheme(theme) {
   return theme;
 }
 
+export function colorOpacity(value) {
+  const color = String(value ?? "").trim();
+  if (/^#[0-9a-f]{6}$/i.test(color) || /^rgb\(/i.test(color)) return 1;
+  const match = color.match(/^rgba\(([^)]+)\)$/i);
+  if (!match) throw new Error(`Cannot read opacity from color: ${color || "<empty>"}`);
+  const components = match[1].split(",").map((component) => component.trim());
+  if (components.length !== 4) throw new Error(`Invalid rgba color: ${color}`);
+  const alpha = components[3].endsWith("%")
+    ? Number(components[3].slice(0, -1)) / 100
+    : Number(components[3]);
+  if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) {
+    throw new Error(`Invalid color opacity: ${components[3]}`);
+  }
+  return alpha;
+}
+
+export function colorWithOpacity(value, opacity) {
+  if (!Number.isFinite(opacity) || opacity < 0 || opacity > 1) {
+    throw new Error(`Invalid conversation opacity: ${opacity}`);
+  }
+  const color = String(value ?? "").trim();
+  let channels;
+  const hexadecimal = color.match(/^#([0-9a-f]{6})$/i);
+  if (hexadecimal) {
+    const packed = Number.parseInt(hexadecimal[1], 16);
+    channels = [
+      (packed >> 16) & 0xff,
+      (packed >> 8) & 0xff,
+      packed & 0xff,
+    ].map(String);
+  } else {
+    const functional = color.match(/^rgba?\(([^)]+)\)$/i);
+    if (!functional) throw new Error(`Cannot change opacity of color: ${color || "<empty>"}`);
+    const components = functional[1].split(",").map((component) => component.trim());
+    if (components.length !== 3 && components.length !== 4) {
+      throw new Error(`Invalid rgb color: ${color}`);
+    }
+    channels = components.slice(0, 3);
+  }
+  const formattedOpacity = String(Number(opacity.toFixed(4)));
+  return `rgba(${channels.join(", ")}, ${formattedOpacity})`;
+}
+
 function themePathForPreset(preset) {
   return preset
     ? path.join(presetsRoot, preset, "theme.json")
@@ -560,6 +616,7 @@ async function readOptionalBackground(backgroundPath) {
 
 export async function buildPayload({
   background = null,
+  conversationOpacity = null,
   preset = null,
   themeDir = null,
 } = {}) {
@@ -576,7 +633,23 @@ export async function buildPayload({
     fs.readFile(source.themePath, "utf8"),
     fs.readFile(path.join(assetsRoot, "selectors.json"), "utf8"),
   ]);
-  const theme = validateTheme(JSON.parse(rawTheme));
+  const sourceTheme = validateTheme(JSON.parse(rawTheme));
+  const defaultConversationColor = sourceTheme.surfaces?.conversation
+    ?? sourceTheme.colors.panelStrong
+    ?? "rgba(255, 255, 255, 0.66)";
+  const themeDefaultConversationOpacity = colorOpacity(defaultConversationColor);
+  const effectiveConversationOpacity = conversationOpacity ?? themeDefaultConversationOpacity;
+  const theme = conversationOpacity === null
+    ? sourceTheme
+    : {
+        ...sourceTheme,
+        surfaces: {
+          conversation: colorWithOpacity(defaultConversationColor, conversationOpacity),
+          menu: sourceTheme.surfaces?.menu
+            ?? sourceTheme.colors.panelStrong
+            ?? "rgba(255, 255, 255, 0.94)",
+        },
+      };
   const selectors = validateSelectorContract(JSON.parse(rawSelectors));
   const art = await readOptionalBackground(
     background || themeBackgroundPath(source.directory, theme),
@@ -603,11 +676,13 @@ export async function buildPayload({
   return {
     backgroundBytes: art.bytes.length,
     backgroundPath: art.sourcePath,
+    conversationOpacity: effectiveConversationOpacity,
     payload,
     preset,
     revision,
     selectors,
     themeDir: themeDir ? source.directory : null,
+    themeDefaultConversationOpacity,
     theme,
   };
 }
@@ -723,12 +798,14 @@ async function runCheck(options) {
   process.stdout.write(`${JSON.stringify({
     backgroundBytes: loaded.backgroundBytes,
     backgroundPath: loaded.backgroundPath,
+    conversationOpacity: loaded.conversationOpacity,
     payloadBytes: Buffer.byteLength(loaded.payload),
     preset: loaded.preset,
     revision: loaded.revision,
     selectorCount: loaded.selectors.selectors.length,
     themeDir: loaded.themeDir,
     themeId: loaded.theme.id,
+    themeDefaultConversationOpacity: loaded.themeDefaultConversationOpacity,
     version: SKIN_VERSION,
   }, null, 2)}\n`);
 }

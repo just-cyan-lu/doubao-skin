@@ -6,6 +6,7 @@ import { randomBytes } from "node:crypto";
 import {
   MAX_BACKGROUND_BYTES,
   buildPayload,
+  colorOpacity,
   validateTheme,
 } from "./injector.mjs";
 
@@ -213,6 +214,11 @@ async function inspectTheme(sourceArgument) {
     directory: inspected.source,
     id: inspected.theme.id.toLowerCase(),
     name: inspected.theme.name,
+    conversationOpacity: colorOpacity(
+      inspected.theme.surfaces?.conversation
+        ?? inspected.theme.colors.panelStrong
+        ?? "rgba(255, 255, 255, 0.66)",
+    ),
     revision: loaded.revision,
   };
 }

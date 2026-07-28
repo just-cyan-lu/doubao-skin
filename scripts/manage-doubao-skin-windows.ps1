@@ -8,6 +8,7 @@ param(
         "disable",
         "enable-startup",
         "disable-startup",
+        "set-conversation-opacity",
         "open",
         "reveal-themes",
         "verify",
@@ -19,6 +20,8 @@ param(
     [int]$Port = 9451,
 
     [string]$ThemeDir = "",
+
+    [string]$ConversationOpacity = "",
 
     [int]$ObservedProcessId = 0,
 
@@ -165,7 +168,9 @@ function Ensure-DoubaoSkinAppRunning {
 function Activate-LibraryTheme {
     param(
         [Parameter(Mandatory = $true)]$Theme,
-        [int]$RequestedPort
+        [int]$RequestedPort,
+        [Nullable[double]]$ConversationOpacityOverride = $null,
+        [switch]$OpacityChange
     )
     $install = Get-OfficialDoubaoInstall
     $selectedPort = Get-ConfiguredPort -Fallback $RequestedPort
@@ -176,6 +181,13 @@ function Activate-LibraryTheme {
 
     $existingConfig = Get-DoubaoSkinConfig
     $startAtLogin = Get-DoubaoSkinStartAtLogin -Config $existingConfig
+    $conversationOpacityValue = if ($null -ne $ConversationOpacityOverride) {
+        ConvertTo-DoubaoSkinConversationOpacity -Value $ConversationOpacityOverride
+    } else {
+        Get-DoubaoSkinConversationOpacity -Config $existingConfig -Theme $Theme
+    }
+    $conversationOpacityText = Format-DoubaoSkinConversationOpacity `
+        -Value $conversationOpacityValue
     Stop-DoubaoSkinEventSupervisor
     Stop-DoubaoSkinWatcher
     try {
@@ -184,12 +196,14 @@ function Activate-LibraryTheme {
             "--once",
             "--port", [string]$selectedPort,
             "--theme-dir", [string]$Theme.directory,
+            "--conversation-opacity", $conversationOpacityText,
             "--timeout-ms", "45000"
         ) | Out-Null
         Invoke-DoubaoSkinNode -Arguments @(
             "--verify",
             "--port", [string]$selectedPort,
             "--theme-dir", [string]$Theme.directory,
+            "--conversation-opacity", $conversationOpacityText,
             "--timeout-ms", "20000"
         ) | Out-Null
     } catch {
@@ -199,14 +213,21 @@ function Activate-LibraryTheme {
         if ($null -ne $existingConfig -and [bool]$existingConfig.enabled) {
             try {
                 $existingPort = [int]$existingConfig.port
+                $existingOpacity = Get-DoubaoSkinConversationOpacity `
+                    -Config $existingConfig `
+                    -Theme $null
+                $existingOpacityText = Format-DoubaoSkinConversationOpacity `
+                    -Value $existingOpacity
                 Invoke-DoubaoSkinNode -Arguments @(
                     "--once",
                     "--port", [string]$existingPort,
                     "--theme-dir", [string]$existingConfig.themeDir,
+                    "--conversation-opacity", $existingOpacityText,
                     "--timeout-ms", "20000"
                 ) | Out-Null
                 Start-DoubaoSkinWatcher `
                     -Port $existingPort `
+                    -ConversationOpacity $existingOpacity `
                     -ThemeDir ([string]$existingConfig.themeDir) `
                     -ThemeId ([string]$existingConfig.themeId) | Out-Null
                 Set-DoubaoSkinStartupRegistration `
@@ -223,16 +244,24 @@ function Activate-LibraryTheme {
         -Enabled $true `
         -StartAtLogin $startAtLogin `
         -Port $selectedPort `
+        -ConversationOpacity $conversationOpacityValue `
         -ThemeDir ([string]$Theme.directory) `
         -ThemeId ([string]$Theme.id) `
         -ThemeName ([string]$Theme.name)
     Start-DoubaoSkinWatcher `
         -Port $selectedPort `
+        -ConversationOpacity $conversationOpacityValue `
         -ThemeDir ([string]$Theme.directory) `
         -ThemeId ([string]$Theme.id) | Out-Null
     Set-DoubaoSkinStartupRegistration -Enabled $startAtLogin
     Start-DoubaoSkinEventSupervisor | Out-Null
-    Write-Output "Theme enabled: $($Theme.name)"
+    if ($OpacityChange) {
+        Write-Output (
+            "Conversation mask opacity: {0}%" -f
+            [Math]::Round($conversationOpacityValue * 100))
+    } else {
+        Write-Output "Theme enabled: $($Theme.name)"
+    }
 }
 
 function Disable-DoubaoSkin {
@@ -242,16 +271,21 @@ function Disable-DoubaoSkin {
     $themeDirValue = ""
     $themeIdValue = ""
     $themeNameValue = ""
+    $conversationOpacityValue = [double]0.66
     if ($null -ne $config) {
         if ($null -ne $config.port) { $portValue = [int]$config.port }
         if ($null -ne $config.themeDir) { $themeDirValue = [string]$config.themeDir }
         if ($null -ne $config.themeId) { $themeIdValue = [string]$config.themeId }
         if ($null -ne $config.themeName) { $themeNameValue = [string]$config.themeName }
+        $conversationOpacityValue = Get-DoubaoSkinConversationOpacity `
+            -Config $config `
+            -Theme $null
     }
     Write-DoubaoSkinConfig `
         -Enabled $false `
         -StartAtLogin $false `
         -Port $portValue `
+        -ConversationOpacity $conversationOpacityValue `
         -ThemeDir $themeDirValue `
         -ThemeId $themeIdValue `
         -ThemeName $themeNameValue
@@ -287,6 +321,8 @@ function Set-DoubaoSkinStartupPreference {
         -Enabled ([bool]$config.enabled) `
         -StartAtLogin $Enabled `
         -Port ([int]$config.port) `
+        -ConversationOpacity (
+            Get-DoubaoSkinConversationOpacity -Config $config -Theme $null) `
         -ThemeDir ([string]$config.themeDir) `
         -ThemeId ([string]$config.themeId) `
         -ThemeName ([string]$config.themeName)
@@ -313,6 +349,8 @@ function Open-DoubaoFromManager {
         Wait-DoubaoCdpEndpoint -Install $install -Port $configuredPort -TimeoutSeconds 40 | Out-Null
         Start-DoubaoSkinWatcher `
             -Port $configuredPort `
+            -ConversationOpacity (
+                Get-DoubaoSkinConversationOpacity -Config $config -Theme $null) `
             -ThemeDir ([string]$config.themeDir) `
             -ThemeId ([string]$config.themeId) | Out-Null
         Write-Output "Doubao opened with the active skin."
@@ -332,6 +370,7 @@ function Get-DoubaoSkinStatusJson {
     $themeIdValue = $null
     $themeNameValue = $null
     $startAtLogin = $false
+    $conversationOpacityValue = [double]0.66
     if ($null -ne $config) {
         $enabled = [bool]$config.enabled
         $startAtLogin = Get-DoubaoSkinStartAtLogin -Config $config
@@ -339,6 +378,16 @@ function Get-DoubaoSkinStatusJson {
         $themeDirValue = $config.themeDir
         $themeIdValue = $config.themeId
         $themeNameValue = $config.themeName
+        $themeForOpacity = $null
+        if (-not [string]::IsNullOrWhiteSpace([string]$config.themeDir)) {
+            try {
+                $themeForOpacity = Get-ValidatedLibraryTheme `
+                    -Source ([string]$config.themeDir)
+            } catch {}
+        }
+        $conversationOpacityValue = Get-DoubaoSkinConversationOpacity `
+            -Config $config `
+            -Theme $themeForOpacity
     }
     $watcherRunning = $false
     if ($null -ne $state -and $null -ne $state.watcherPid) {
@@ -357,6 +406,7 @@ function Get-DoubaoSkinStatusJson {
         themeDir = $themeDirValue
         themeId = $themeIdValue
         themeName = $themeNameValue
+        conversationOpacity = $conversationOpacityValue
         startAtLogin = $startAtLogin
         startupRegistered = (Test-DoubaoSkinStartupRegistration)
         managerInstallPath = (Split-Path -Parent $script:ProjectRoot)
@@ -391,6 +441,8 @@ function Invoke-SupervisorOnce {
         $install = Get-OfficialDoubaoInstall
         Start-DoubaoSkinWatcher `
             -Port $portValue `
+            -ConversationOpacity (
+                Get-DoubaoSkinConversationOpacity -Config $config -Theme $theme) `
             -ThemeDir ([string]$theme.directory) `
             -ThemeId ([string]$theme.id) | Out-Null
 
@@ -478,6 +530,24 @@ $commandOutput = @(switch ($Command) {
     "disable-startup" {
         Set-DoubaoSkinStartupPreference -Enabled $false
     }
+    "set-conversation-opacity" {
+        $config = Get-DoubaoSkinConfig
+        if ($null -eq $config -or -not [bool]$config.enabled) {
+            Fail-DoubaoSkin "Enable a theme before changing conversation mask opacity."
+        }
+        if ([string]::IsNullOrWhiteSpace($ConversationOpacity)) {
+            Fail-DoubaoSkin "Conversation mask opacity is required."
+        }
+        $opacityValue = ConvertTo-DoubaoSkinConversationOpacity `
+            -Value $ConversationOpacity
+        $selectedTheme = Get-ValidatedLibraryTheme `
+            -Source ([string]$config.themeDir)
+        Activate-LibraryTheme `
+            -Theme $selectedTheme `
+            -RequestedPort ([int]$config.port) `
+            -ConversationOpacityOverride $opacityValue `
+            -OpacityChange
+    }
     "open" {
         Open-DoubaoFromManager
     }
@@ -493,10 +563,15 @@ $commandOutput = @(switch ($Command) {
         }
         $install = Get-OfficialDoubaoInstall
         Assert-DoubaoCdpEndpoint -Install $install -Port ([int]$config.port) | Out-Null
+        $opacityValue = Get-DoubaoSkinConversationOpacity `
+            -Config $config `
+            -Theme $null
         Invoke-DoubaoSkinNode -Arguments @(
             "--verify",
             "--port", [string]$config.port,
             "--theme-dir", [string]$config.themeDir,
+            "--conversation-opacity",
+            (Format-DoubaoSkinConversationOpacity -Value $opacityValue),
             "--timeout-ms", "20000"
         )
     }
@@ -504,11 +579,17 @@ $commandOutput = @(switch ($Command) {
         $config = Get-DoubaoSkinConfig
         if ($null -ne $config -and [bool]$config.enabled) {
             $startAtLogin = Get-DoubaoSkinStartAtLogin -Config $config
-            if ($null -eq $config.PSObject.Properties["startAtLogin"]) {
+            if ($null -eq $config.PSObject.Properties["startAtLogin"] -or
+                $null -eq $config.PSObject.Properties["conversationOpacity"]) {
+                $theme = Get-ValidatedLibraryTheme -Source ([string]$config.themeDir)
+                $opacityValue = Get-DoubaoSkinConversationOpacity `
+                    -Config $config `
+                    -Theme $theme
                 Write-DoubaoSkinConfig `
                     -Enabled ([bool]$config.enabled) `
                     -StartAtLogin $startAtLogin `
                     -Port ([int]$config.port) `
+                    -ConversationOpacity $opacityValue `
                     -ThemeDir ([string]$config.themeDir) `
                     -ThemeId ([string]$config.themeId) `
                     -ThemeName ([string]$config.themeName)

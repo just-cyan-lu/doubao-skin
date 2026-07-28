@@ -7,6 +7,7 @@ struct SkinStatus: Decodable {
     let themeDir: String?
     let themeId: String?
     let themeName: String?
+    let conversationOpacity: Double
     let running: Bool
     let skinActive: Bool
     let supervisorRunning: Bool
@@ -121,6 +122,7 @@ final class SkinViewModel: ObservableObject {
     @Published private(set) var status: SkinStatus?
     @Published private(set) var themes: [ThemeSummary] = []
     @Published var selectedTheme: ThemeSummary?
+    @Published var conversationOpacity = 0.66
     @Published private(set) var invalidThemeCount = 0
     @Published private(set) var libraryDirectory = ""
     @Published var message = "正在读取主题库和状态…"
@@ -131,6 +133,9 @@ final class SkinViewModel: ObservableObject {
     var enabled: Bool { status?.enabled == true }
     var canApply: Bool { selectedTheme != nil && !busy }
     var selectedThemeName: String { selectedTheme?.name ?? "未选择主题" }
+    var conversationOpacityPercent: Int {
+        Int((conversationOpacity * 100).rounded())
+    }
 
     var statusTitle: String {
         guard let status else { return "读取中" }
@@ -248,6 +253,22 @@ final class SkinViewModel: ObservableObject {
         }
     }
 
+    func commitConversationOpacity() {
+        guard enabled, !busy else { return }
+        let normalized = min(1, max(0, conversationOpacity))
+        conversationOpacity = normalized
+        let value = String(
+            format: "%.2f",
+            locale: Locale(identifier: "en_US_POSIX"),
+            normalized
+        )
+        runOperation(progress: "正在调整对话页蒙版…") {
+            try await SkinManager.run([
+                "set-conversation-opacity", "--conversation-opacity", value,
+            ])
+        }
+    }
+
     private func runOperation(
         progress: String,
         reloadAfter: Bool = true,
@@ -280,6 +301,7 @@ final class SkinViewModel: ObservableObject {
         invalidThemeCount = latestLibrary.invalid.count
         libraryDirectory = latestLibrary.directory
         status = latestStatus
+        conversationOpacity = min(1, max(0, latestStatus.conversationOpacity))
 
         let activeTheme = latestLibrary.themes.first {
             if let themeDir = latestStatus.themeDir {
@@ -487,6 +509,33 @@ struct ContentView: View {
                 .foregroundStyle(.orange)
             }
 
+            VStack(alignment: .leading, spacing: 7) {
+                HStack {
+                    Label("对话页蒙版不透明度", systemImage: "square.stack.3d.up.fill")
+                        .font(.subheadline.weight(.semibold))
+                    Spacer()
+                    Text("\(model.conversationOpacityPercent)%")
+                        .font(.system(.subheadline, design: .monospaced).weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+                Slider(
+                    value: $model.conversationOpacity,
+                    in: 0...1,
+                    step: 0.01,
+                    onEditingChanged: { editing in
+                        if !editing {
+                            model.commitConversationOpacity()
+                        }
+                    }
+                )
+                .disabled(!model.enabled || model.busy)
+                .accessibilityLabel("对话页蒙版不透明度")
+                Text("只影响有聊天内容时覆盖在背景图上的阅读蒙版；首页、菜单和发送框不变。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 2)
+
             Button {
                 model.apply()
             } label: {
@@ -536,7 +585,7 @@ struct ContentView: View {
             .foregroundStyle(.secondary)
         }
         .padding(28)
-        .frame(width: 820, height: 604)
+        .frame(width: 820, height: 680)
         .background(Color(nsColor: .windowBackgroundColor))
         .task { model.load() }
         .alert("停用 Doubao Skin？", isPresented: $model.showDisableConfirmation) {

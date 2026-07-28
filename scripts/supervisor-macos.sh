@@ -57,6 +57,7 @@ trap shutdown INT TERM EXIT
 
 PORT="$(config_value port)"
 THEME_DIR="$(config_value themeDir)"
+CONVERSATION_OPACITY="$(config_value conversationOpacity)"
 case "$PORT" in
   ''|*[!0-9]*) log "invalid configured port"; exit 1 ;;
 esac
@@ -75,14 +76,18 @@ if ! discover_doubao_app || ! verify_doubao_signature || ! require_node; then
 fi
 
 start_watcher() {
+  local watcher_args=(
+    --watch
+    --port "$PORT"
+    --theme-dir "$THEME_DIR"
+    --timeout-ms 45000
+  )
   if [ -n "$WATCHER_PID" ] && /bin/kill -0 "$WATCHER_PID" 2>/dev/null; then
     return 0
   fi
-  "$NODE" "$INJECTOR" \
-    --watch \
-    --port "$PORT" \
-    --theme-dir "$THEME_DIR" \
-    --timeout-ms 45000 &
+  [ -z "$CONVERSATION_OPACITY" ] \
+    || watcher_args+=(--conversation-opacity "$CONVERSATION_OPACITY")
+  "$NODE" "$INJECTOR" "${watcher_args[@]}" &
   WATCHER_PID="$!"
   log "theme watcher started (pid $WATCHER_PID)"
 }

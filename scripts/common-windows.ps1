@@ -526,11 +526,55 @@ function Get-DoubaoSkinStartAtLogin {
     return [bool]$property.Value
 }
 
+function ConvertTo-DoubaoSkinConversationOpacity {
+    param([Parameter(Mandatory = $true)]$Value)
+    try {
+        $opacity = [Convert]::ToDouble(
+            $Value,
+            [Globalization.CultureInfo]::InvariantCulture)
+    } catch {
+        Fail-DoubaoSkin "Conversation mask opacity must be between 0 and 1."
+    }
+    if ([double]::IsNaN($opacity) -or
+        [double]::IsInfinity($opacity) -or
+        $opacity -lt 0 -or
+        $opacity -gt 1) {
+        Fail-DoubaoSkin "Conversation mask opacity must be between 0 and 1."
+    }
+    return [Math]::Round($opacity, 4)
+}
+
+function Format-DoubaoSkinConversationOpacity {
+    param([Parameter(Mandatory = $true)][double]$Value)
+    return $Value.ToString("0.####", [Globalization.CultureInfo]::InvariantCulture)
+}
+
+function Get-DoubaoSkinConversationOpacity {
+    param(
+        $Config,
+        $Theme
+    )
+    if ($null -ne $Config) {
+        $property = $Config.PSObject.Properties["conversationOpacity"]
+        if ($null -ne $property -and $null -ne $property.Value) {
+            return ConvertTo-DoubaoSkinConversationOpacity -Value $property.Value
+        }
+    }
+    if ($null -ne $Theme) {
+        $property = $Theme.PSObject.Properties["conversationOpacity"]
+        if ($null -ne $property -and $null -ne $property.Value) {
+            return ConvertTo-DoubaoSkinConversationOpacity -Value $property.Value
+        }
+    }
+    return [double]0.66
+}
+
 function Write-DoubaoSkinConfig {
     param(
         [Parameter(Mandatory = $true)][bool]$Enabled,
         [Parameter(Mandatory = $true)][bool]$StartAtLogin,
         [Parameter(Mandatory = $true)][int]$Port,
+        [Parameter(Mandatory = $true)][double]$ConversationOpacity,
         [string]$ThemeDir,
         [string]$ThemeId,
         [string]$ThemeName
@@ -540,6 +584,7 @@ function Write-DoubaoSkinConfig {
         enabled = $Enabled
         startAtLogin = $StartAtLogin
         port = $Port
+        conversationOpacity = $ConversationOpacity
         themeDir = $ThemeDir
         themeId = $ThemeId
         themeName = $ThemeName
@@ -555,6 +600,7 @@ function Write-DoubaoSkinState {
     param(
         [Parameter(Mandatory = $true)][string]$Status,
         [Parameter(Mandatory = $true)][int]$Port,
+        [Parameter(Mandatory = $true)][double]$ConversationOpacity,
         [string]$ThemeDir,
         [string]$ThemeId,
         [Nullable[int]]$WatcherPid
@@ -564,6 +610,7 @@ function Write-DoubaoSkinState {
         status = $Status
         persistent = $true
         port = $Port
+        conversationOpacity = $ConversationOpacity
         themeDir = $ThemeDir
         themeId = $ThemeId
         watcherPid = $WatcherPid
@@ -602,6 +649,7 @@ function Stop-DoubaoSkinWatcher {
 function Start-DoubaoSkinWatcher {
     param(
         [Parameter(Mandatory = $true)][int]$Port,
+        [Parameter(Mandatory = $true)][double]$ConversationOpacity,
         [Parameter(Mandatory = $true)][string]$ThemeDir,
         [Parameter(Mandatory = $true)][string]$ThemeId
     )
@@ -620,6 +668,8 @@ function Start-DoubaoSkinWatcher {
         "--watch",
         "--port", [string]$Port,
         "--theme-dir", (Quote-WindowsProcessArgument -Value $ThemeDir),
+        "--conversation-opacity",
+        (Format-DoubaoSkinConversationOpacity -Value $ConversationOpacity),
         "--timeout-ms", "45000"
     ) -join " "
     $process = Start-Process -FilePath $script:NodePath `
@@ -628,7 +678,13 @@ function Start-DoubaoSkinWatcher {
         -RedirectStandardOutput $script:WatcherLogPath `
         -RedirectStandardError $script:WatcherErrorLogPath `
         -PassThru
-    Write-DoubaoSkinState -Status "active" -Port $Port -ThemeDir $ThemeDir -ThemeId $ThemeId -WatcherPid $process.Id
+    Write-DoubaoSkinState `
+        -Status "active" `
+        -Port $Port `
+        -ConversationOpacity $ConversationOpacity `
+        -ThemeDir $ThemeDir `
+        -ThemeId $ThemeId `
+        -WatcherPid $process.Id
     return $process.Id
 }
 

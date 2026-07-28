@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -15,6 +16,7 @@ namespace DoubaoSkin
         public string schema { get; set; }
         public bool enabled { get; set; }
         public bool startAtLogin { get; set; }
+        public double conversationOpacity { get; set; }
         public int? port { get; set; }
         public string themeDir { get; set; }
         public string themeId { get; set; }
@@ -181,6 +183,8 @@ namespace DoubaoSkin
         private readonly Button refreshButton;
         private readonly Button openLibraryButton;
         private readonly CheckBox startupCheckBox;
+        private readonly TrackBar conversationOpacitySlider;
+        private readonly Label conversationOpacityValue;
         private ThemeLibrary library;
         private SkinStatus status;
         private ThemeSummary selectedTheme;
@@ -188,6 +192,7 @@ namespace DoubaoSkin
         private bool exitRequested;
         private bool balloonShown;
         private bool updatingStartup;
+        private bool updatingOpacity;
 
         public SkinManagerForm(bool startHiddenValue)
         {
@@ -315,7 +320,7 @@ namespace DoubaoSkin
 
             Panel footer = new Panel();
             footer.Dock = DockStyle.Bottom;
-            footer.Height = 142;
+            footer.Height = 182;
             footer.Padding = new Padding(20, 12, 20, 14);
             footer.BackColor = Color.FromArgb(250, 249, 245);
 
@@ -343,18 +348,55 @@ namespace DoubaoSkin
             };
             disableButton.Click += async delegate { await DisableSkinAsync(); };
 
+            Label conversationOpacityLabel = new Label();
+            conversationOpacityLabel.Text = "对话页蒙版不透明度";
+            conversationOpacityLabel.ForeColor = Color.FromArgb(66, 85, 69);
+            conversationOpacityLabel.SetBounds(22, 101, 122, 24);
+
+            conversationOpacitySlider = new TrackBar();
+            conversationOpacitySlider.Minimum = 0;
+            conversationOpacitySlider.Maximum = 100;
+            conversationOpacitySlider.TickFrequency = 10;
+            conversationOpacitySlider.SmallChange = 1;
+            conversationOpacitySlider.LargeChange = 10;
+            conversationOpacitySlider.Value = 66;
+            conversationOpacitySlider.Enabled = false;
+            conversationOpacitySlider.SetBounds(145, 91, 600, 44);
+            conversationOpacitySlider.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            conversationOpacityValue = new Label();
+            conversationOpacityValue.Text = "66%";
+            conversationOpacityValue.TextAlign = ContentAlignment.MiddleRight;
+            conversationOpacityValue.ForeColor = Color.FromArgb(66, 85, 69);
+            conversationOpacityValue.SetBounds(756, 101, 70, 24);
+            conversationOpacityValue.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            conversationOpacitySlider.ValueChanged += delegate
+            {
+                conversationOpacityValue.Text =
+                    conversationOpacitySlider.Value.ToString(CultureInfo.InvariantCulture) + "%";
+            };
+            conversationOpacitySlider.MouseUp += async delegate
+            {
+                await ApplyConversationOpacityAsync();
+            };
+            conversationOpacitySlider.KeyUp += async delegate
+            {
+                await ApplyConversationOpacityAsync();
+            };
+
             Label copyright = new Label();
             copyright.Text =
                 "© 2026 陆思源Cyan · AGPL-3.0-only · 无担保；传播或售卖须保留版权并提供源码";
             copyright.ForeColor = Color.FromArgb(112, 120, 111);
             copyright.AutoEllipsis = true;
-            copyright.SetBounds(22, 108, 670, 22);
+            copyright.SetBounds(22, 148, 670, 22);
             copyright.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
             LinkLabel projectLink = new LinkLabel();
             projectLink.Text = "GitHub 项目";
             projectLink.TextAlign = ContentAlignment.MiddleRight;
-            projectLink.SetBounds(730, 108, 120, 22);
+            projectLink.SetBounds(730, 148, 120, 22);
             projectLink.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             projectLink.LinkClicked += delegate
             {
@@ -365,6 +407,9 @@ namespace DoubaoSkin
             footer.Controls.Add(applyButton);
             footer.Controls.Add(openDoubaoButton);
             footer.Controls.Add(disableButton);
+            footer.Controls.Add(conversationOpacityLabel);
+            footer.Controls.Add(conversationOpacitySlider);
+            footer.Controls.Add(conversationOpacityValue);
             footer.Controls.Add(copyright);
             footer.Controls.Add(projectLink);
 
@@ -714,6 +759,25 @@ namespace DoubaoSkin
                 true);
         }
 
+        private async Task ApplyConversationOpacityAsync()
+        {
+            if (updatingOpacity || busy || status == null || !status.enabled)
+            {
+                return;
+            }
+            string opacity = ((double)conversationOpacitySlider.Value / 100)
+                .ToString("0.00", CultureInfo.InvariantCulture);
+            await RunOperationAsync(
+                "正在调整对话页蒙版…",
+                new[] {
+                    "set-conversation-opacity",
+                    "-ConversationOpacity",
+                    opacity
+                },
+                true,
+                true);
+        }
+
         private async Task RunOperationAsync(
             string progress,
             string[] arguments,
@@ -771,6 +835,8 @@ namespace DoubaoSkin
             openDoubaoButton.Enabled = !value;
             disableButton.Enabled = !value && status != null && status.enabled;
             startupCheckBox.Enabled = !value && status != null && status.enabled;
+            conversationOpacitySlider.Enabled =
+                !value && status != null && status.enabled;
             applyButton.Enabled = !value && selectedTheme != null;
             if (!string.IsNullOrWhiteSpace(message))
             {
@@ -796,6 +862,19 @@ namespace DoubaoSkin
             {
                 updatingStartup = false;
             }
+            updatingOpacity = true;
+            try
+            {
+                int opacityPercent = (int)Math.Round(
+                    Math.Max(0, Math.Min(1, status.conversationOpacity)) * 100);
+                conversationOpacitySlider.Value = opacityPercent;
+                conversationOpacityValue.Text =
+                    opacityPercent.ToString(CultureInfo.InvariantCulture) + "%";
+            }
+            finally
+            {
+                updatingOpacity = false;
+            }
             if (status.enabled)
             {
                 statusTitle.Text = status.skinActive ? "皮肤已应用" : "常驻已启用";
@@ -812,6 +891,7 @@ namespace DoubaoSkin
             }
             disableButton.Enabled = !busy && status.enabled;
             startupCheckBox.Enabled = !busy && status.enabled;
+            conversationOpacitySlider.Enabled = !busy && status.enabled;
             UpdateApplyButton();
         }
 

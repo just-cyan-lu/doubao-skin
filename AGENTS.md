@@ -120,6 +120,11 @@ Use `surfaces.conversation` for the conversation-route readability scrim and
 `surfaces.menu` for portaled menu/dialog surfaces. Opacity terminology is
 normative: `1.00` means 100% opaque, so alpha `0.90` means 90% opacity and 10%
 transparency.
+The theme alpha is the initial conversation default. Both managers expose one
+persistent `conversationOpacity` user override from `0.00` to `1.00`; it may
+replace only the alpha of `surfaces.conversation`, must preserve that token's
+RGB, and must be forwarded consistently to once/watch/verify injection. It
+must not change the home view, menu, composer, or add a backdrop blur.
 
 ## Required workflow
 
@@ -212,6 +217,9 @@ When adding or changing a theme:
   `conversation.backdropFilter === "none"`, both the message list and bottom
   fade are present, and the bottom fade no longer uses Doubao's opaque
   `rgb(252, 252, 252)` white.
+- Both manager sliders display and persist `conversationOpacity`; changing it
+  live updates only the conversation readability scrim, survives theme
+  switches and relaunches, and preserves the selected theme's scrim RGB.
 - The manager remains running in the macOS menu bar or Windows system tray
   after its window is closed and can reopen that window from its status menu.
   On macOS its Dock icon is present while the manager window is open and is

@@ -156,6 +156,14 @@ the semantic class fragment `from-s-color-bg-body`; the skin rebuilds that fade
 from the same conversation token so it cannot become a detached white strip.
 Menus use `surfaces.menu`; start around alpha `0.94` for readable labels.
 
+`surfaces.conversation` 的 alpha 是主题首次启用时的默认值。两个平台管理器还提供
+`0%`–`100%` 的“对话页蒙版不透明度”用户覆盖，并把规范化后的
+`conversationOpacity` 持久化到平台配置。注入器只替换
+`surfaces.conversation` 的 alpha，保留主题定义的 RGB；菜单、首页与发送框均不受
+影响。`0.00` 表示完全透明，`1.00` 表示完全不透明。监督器、一次注入和验证命令
+必须使用同一个覆盖值，且对话蒙版始终保持 `backdrop-filter: none`，不得因滑块
+引入模糊。
+
 ## 3. Create a theme package
 
 1. Copy `presets/_template` to `presets/<id>`.
@@ -301,6 +309,9 @@ npm run build:app
 # Normal manager path: activate a validated direct child of the theme library.
 ./scripts/manage-doubao-skin-macos.sh activate-library \
   --theme-dir "$HOME/Library/Application Support/DoubaoSkin/themes/<id>"
+# Manager-equivalent user override; persists in config.plist.
+./scripts/manage-doubao-skin-macos.sh set-conversation-opacity \
+  --conversation-opacity 0.66
 # Quit Doubao, launch it normally from Dock/Finder, then verify:
 ./scripts/manage-doubao-skin-macos.sh verify
 ```
@@ -311,6 +322,9 @@ Windows packaging and persistence check:
 .\scripts\build-windows-app.ps1
 .\scripts\install-windows-app.ps1
 & "$env:LOCALAPPDATA\Programs\Doubao Skin\runtime\scripts\manage-doubao-skin-windows.ps1" verify
+# Manager-equivalent user override; persists in config.json.
+& "$env:LOCALAPPDATA\Programs\Doubao Skin\runtime\scripts\manage-doubao-skin-windows.ps1" `
+  set-conversation-opacity -ConversationOpacity 0.66
 ```
 
 The default archive must contain root-level `Install Doubao Skin.cmd`,

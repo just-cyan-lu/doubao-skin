@@ -9,6 +9,8 @@ import test from "node:test";
 import {
   MAX_BACKGROUND_BYTES,
   buildPayload,
+  colorOpacity,
+  colorWithOpacity,
   isAllowedPageUrl,
   isValidCdpPageTarget,
   parseArgs,
@@ -34,6 +36,7 @@ test("manager icon master and platform assets are complete", async () => {
 test("argument parsing is explicit and bounded", () => {
   assert.deepEqual(parseArgs(["--once", "--port", "9459", "--timeout-ms", "1200"]), {
     background: null,
+    conversationOpacity: null,
     mode: "once",
     port: 9459,
     preset: null,
@@ -51,12 +54,37 @@ test("argument parsing is explicit and bounded", () => {
   );
   assert.throws(() => parseArgs(["--port", "80"]), /Invalid CDP port/);
   assert.throws(() => parseArgs(["--timeout-ms", "10"]), /Invalid timeout/);
+  assert.equal(parseArgs(["--conversation-opacity", "0.42"]).conversationOpacity, 0.42);
+  assert.throws(
+    () => parseArgs(["--conversation-opacity", "1.01"]),
+    /Invalid conversation opacity/,
+  );
   assert.throws(() => parseArgs(["--preset", "../escape"]), /Invalid preset ID/);
   assert.throws(
     () => parseArgs(["--preset", "mbti-boy-infp", "--theme-dir", "/tmp/theme"]),
     /cannot be used together/,
   );
   assert.throws(() => parseArgs(["--unknown"]), /Unknown argument/);
+});
+
+test("conversation scrim opacity override preserves its theme color", async () => {
+  assert.equal(colorOpacity("#fefcf7"), 1);
+  assert.equal(colorOpacity("rgba(250, 248, 240, 0.66)"), 0.66);
+  assert.equal(
+    colorWithOpacity("rgba(250, 248, 240, 0.66)", 0.42),
+    "rgba(250, 248, 240, 0.42)",
+  );
+  const defaultPayload = await buildPayload({ preset: "mbti-boy-infp" });
+  const overridden = await buildPayload({
+    conversationOpacity: 0.42,
+    preset: "mbti-boy-infp",
+  });
+  assert.equal(defaultPayload.themeDefaultConversationOpacity, 0.66);
+  assert.equal(overridden.themeDefaultConversationOpacity, 0.66);
+  assert.equal(overridden.conversationOpacity, 0.42);
+  assert.equal(overridden.theme.surfaces.conversation, "rgba(250, 248, 240, 0.42)");
+  assert.equal(overridden.theme.surfaces.menu, defaultPayload.theme.surfaces.menu);
+  assert.notEqual(overridden.revision, defaultPayload.revision);
 });
 
 test("only Doubao chat renderer URLs are accepted", () => {
@@ -342,6 +370,7 @@ test("theme packages install as a validated JSON and background pair", async (co
   assert.equal(library.schema, "doubao-skin-theme-library/1");
   assert.equal(library.themes.length, 1);
   assert.equal(library.themes[0].id, "mbti-boy-infp");
+  assert.equal(library.themes[0].conversationOpacity, 0.66);
   assert.equal(
     library.themes[0].backgroundPath,
     path.join(installed.directory, sourceTheme.background),
@@ -536,6 +565,10 @@ test("repository and release builders publish the AGPL legal notice", async () =
   assert.match(readme, /Copyright © 2026 \*\*陆思源Cyan\*\*/);
   assert.match(readme, /收费本身并不违规/);
   assert.match(readme, /完整对应源码/);
+  assert.doesNotMatch(
+    readme,
+    /AGPL 不授予“豆包”、字节跳动及其他第三方名称、商标、官方程序或第三方素材的任何权利/,
+  );
 
   assert.match(swiftApp, /© 2026 陆思源Cyan/);
   assert.match(swiftApp, /Link\("GitHub 项目"/);
@@ -624,6 +657,7 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
   assert.match(authoringGuide, /untintedRasterIconCount/);
   assert.match(authoringGuide, /modeMenu\.untintedRasterIconCount/);
   assert.match(authoringGuide, /moreMenu\.unexpectedFilledItemCount/);
+  assert.match(authoringGuide, /conversationOpacity/);
   assert.match(authoringGuide, /--theme-dir/);
   assert.match(appGuide, /theme\.json/);
   assert.match(appGuide, /打开主题库/);
@@ -634,6 +668,7 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
   assert.match(supervisor, /normal Doubao launch detected/);
   assert.match(managerScript, /activate-library/);
   assert.match(managerScript, /list-themes/);
+  assert.match(managerScript, /conversationOpacity -float/);
   assert.match(managerScript, /THEME_LIBRARY_MARKER/);
   assert.match(managerScript, /seed "\$PROJECT_ROOT\/presets" "\$THEMES_ROOT"/);
   assert.match(macCommon, /bundled-theme-library-v2/);
@@ -649,6 +684,7 @@ test("repository ships a complete cross-platform AI-agent theme authoring contra
   assert.match(swiftApp, /ThemeLibraryCard/);
   assert.match(swiftApp, /activate-library/);
   assert.match(swiftApp, /list-themes/);
+  assert.match(swiftApp, /set-conversation-opacity/);
   assert.doesNotMatch(swiftApp, /NSOpenPanel|选择主题文件夹/);
   assert.match(infoPlist, /<key>LSUIElement<\/key>\s*<true\/>/);
   assert.match(infoPlist, /<key>CFBundleIconFile<\/key>\s*<string>DoubaoSkin\.icns<\/string>/);
@@ -715,6 +751,7 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(commonScript, /No verified Doubao chat renderer is exposed by CDP/);
   assert.match(commonScript, /WindowsPowerShell\\v1\.0\\powershell\.exe/);
   assert.match(commonScript, /Get-DoubaoSkinStartAtLogin/);
+  assert.match(commonScript, /Get-DoubaoSkinConversationOpacity/);
   assert.match(commonScript, /Test-DoubaoSkinStartupRegistration/);
   assert.match(commonScript, /startAtLogin\s*=\s*\$StartAtLogin/);
   assert.match(commonScript, /\$stableEmptySamples\s*=\s*0/);
@@ -728,6 +765,10 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(managerScript, /\[int\]\$ObservedProcessId = 0/);
   assert.match(managerScript, /Get-ObservedNormalDoubaoMain/);
   assert.match(managerScript, /-NormalLaunchProcessId \$ObservedProcessId/);
+  assert.match(managerScript, /set-conversation-opacity/);
+  assert.match(trayScript, /conversationOpacitySlider/);
+  assert.match(nativeManager, /conversationOpacitySlider/);
+  assert.equal(strings.conversationOpacity, "对话页蒙版不透明度");
   assert.match(managerScript, /ensure-supervisor/);
   assert.match(
     managerScript,
@@ -809,6 +850,7 @@ test("Windows manager pins official identity and uses event-driven tray persiste
   assert.match(packageInstaller, /-PackagePath \$packageRoot/);
   assert.match(packageCommand, /Install Doubao Skin\.ps1/);
   assert.match(packageReadme, /全部解压/);
+  assert.match(packageReadme, /对话页蒙版不透明度/);
   assert.match(windowsGuide, /Smart App Control/);
   assert.match(windowsGuide, /no unconditional periodic relaunch check/i);
   assert.match(windowsGuide, /without `-Background`/);
