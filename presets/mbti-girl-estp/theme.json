@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-estp",
+  "name": "ESTP · 企业家女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(52, 50, 46, 0.76)",
+    "menu": "rgba(52, 50, 46, 0.96)"
+  },
+  "decoration": {
+    "title": "ESTP",
+    "subtitle": "企业家",
+    "lines": [
+      "果断行动",
+      "灵活应变",
+      "敢于冒险"
+    ]
+  },
+  "composer": {
+    "text": "#f1ece2",
+    "placeholder": "#b4aa9b",
+    "toolbar": "#e7dbc8",
+    "iconFilter": "brightness(0%) saturate(100%) invert(90%) sepia(33%) saturate(95%) hue-rotate(-4deg) brightness(81%) contrast(129%)",
+    "background": "rgba(52, 50, 46, 0.72)",
+    "backgroundAccent": "rgba(52, 50, 46, 0.72)",
+    "border": "rgba(176, 131, 79, .30)"
+  },
+  "typography": {
+    "primary": "#f1ece2",
+    "secondary": "#d6cfc3",
+    "muted": "#b4aa9b",
+    "subtle": "rgba(180, 170, 155, 0.72)",
+    "disabled": "rgba(180, 170, 155, 0.44)",
+    "heading": "#f1ece2",
+    "sidebar": "#f1ece2",
+    "sidebarMuted": "#b4aa9b",
+    "suggestion": "#ddd7cb",
+    "action": "#e7dbc8",
+    "link": "#c5a06b"
+  },
+  "colors": {
+    "accent": "#b0834f",
+    "accentSoft": "#c5a06b",
+    "cyan": "#7d6b53",
+    "pink": "#98614c",
+    "text": "#f1ece2",
+    "muted": "#b4aa9b",
+    "panel": "rgba(52, 50, 46, 0.72)",
+    "panelStrong": "rgba(65, 62, 56, 0.88)",
+    "line": "rgba(176, 131, 79, .30)"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-istp",
+  "name": "ISTP · 鉴赏家女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(55, 53, 48, 0.76)",
+    "menu": "rgba(55, 53, 48, 0.96)"
+  },
+  "decoration": {
+    "title": "ISTP",
+    "subtitle": "鉴赏家",
+    "lines": [
+      "冷静务实",
+      "擅长动手",
+      "随机应变"
+    ]
+  },
+  "composer": {
+    "text": "#eee8dc",
+    "placeholder": "#afa696",
+    "toolbar": "#e4d7c2",
+    "iconFilter": "brightness(0%) saturate(100%) invert(92%) sepia(14%) saturate(341%) hue-rotate(-7deg) brightness(96%) contrast(86%)",
+    "background": "rgba(55, 53, 48, 0.72)",
+    "backgroundAccent": "rgba(55, 53, 48, 0.72)",
+    "border": "rgba(167, 123, 69, .30)"
+  },
+  "typography": {
+    "primary": "#eee8dc",
+    "secondary": "#d2cbbd",
+    "muted": "#afa696",
+    "subtle": "rgba(175, 166, 150, 0.72)",
+    "disabled": "rgba(175, 166, 150, 0.44)",
+    "heading": "#eee8dc",
+    "sidebar": "#eee8dc",
+    "sidebarMuted": "#afa696",
+    "suggestion": "#dad3c6",
+    "action": "#e4d7c2",
+    "link": "#c19967"
+  },
+  "colors": {
+    "accent": "#a77b45",
+    "accentSoft": "#c19967",
+    "cyan": "#6f7766",
+    "pink": "#8b604c",
+    "text": "#eee8dc",
+    "muted": "#afa696",
+    "panel": "rgba(55, 53, 48, 0.72)",
+    "panelStrong": "rgba(68, 64, 57, 0.88)",
+    "line": "rgba(167, 123, 69, .30)"
+  }
+}

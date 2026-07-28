@@ -1,0 +1,142 @@
+{
+  "schema": "doubao-skin-selectors/1",
+  "verifiedAgainst": {
+    "date": "2026-07-24",
+    "doubaoVersion": "2.19.9",
+    "chromium": "135.0.7049.72",
+    "platform": "macOS arm64 and Windows 11 x64"
+  },
+  "targetUrls": [
+    "doubao://doubao-chat/",
+    "chrome://doubao-chat/",
+    "https://www.doubao.com/chat/"
+  ],
+  "selectors": [
+    {
+      "key": "shell",
+      "selector": "[data-testid=\"chat-route-layout\"]",
+      "tier": "L1",
+      "required": true
+    },
+    {
+      "key": "sidebar-nav",
+      "selector": "[data-testid=\"chat_route_layout_leftside_nav\"]",
+      "tier": "L1",
+      "required": true
+    },
+    {
+      "key": "sidebar",
+      "selector": "[data-testid=\"flow_chat_sidebar\"]",
+      "tier": "L1",
+      "required": true
+    },
+    {
+      "key": "composer",
+      "selector": "[data-testid=\"chat_input\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "composer-surface",
+      "selector": "[data-testid=\"chat_input\"] > [class*=\"input-guidance-input-container-background\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "composer-input",
+      "selector": "[data-testid=\"chat_input_input\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "composer-mode-select",
+      "selector": "[data-valid-btn=\"mode-select-action-btn\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "mode-select-menu",
+      "selector": "[role=\"menu\"]:has(img[src*=\"/mode_fast.png\"])",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "more-menu",
+      "selector": "[role=\"dialog\"]:has([data-input-engine-action-source=\"actionbar\"][data-testid=\"skill_bar_button_1005\"]):has([data-input-engine-action-source=\"actionbar\"][data-testid=\"skill_bar_button_9\"]):has([data-input-engine-action-source=\"actionbar\"][data-testid=\"skill_bar_button_11\"])",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "home",
+      "selector": "[data-testid=\"flow_chat_guidance_page\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "suggestion",
+      "selector": "[data-testid=\"onboarding_sug_item\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "conversation-title",
+      "selector": "[data-testid=\"editable_conversation_name\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "conversation-message-list",
+      "selector": "[data-testid=\"message-list\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "conversation-surface",
+      "selector": "main:has([data-testid=\"message-list\"])",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "conversation-bottom-fade",
+      "selector": "main:has([data-testid=\"message-list\"]) [class*=\"from-s-color-bg-body\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "sidebar-thread",
+      "selector": "[data-testid=\"chat_list_thread_item\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "sidebar-thread-title",
+      "selector": "[data-testid=\"chat_list_item_title\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "new-conversation",
+      "selector": "[data-testid=\"create_conversation_button\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "new-office-task",
+      "selector": "[data-testid=\"create_office_task_button\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "skill-bar",
+      "selector": "[data-testid=\"guidance-skill-bar\"]",
+      "tier": "L2",
+      "required": false
+    },
+    {
+      "key": "overlay",
+      "selector": "[role=\"dialog\"], [role=\"menu\"], [data-radix-popper-content-wrapper]",
+      "tier": "L2",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "doubao-skin-windows-identity/1",
+  "verifiedAgainst": {
+    "observedAt": "2026-07-24",
+    "doubaoLauncherVersion": "2.19.9",
+    "chromiumVersion": "135.0.7049.72",
+    "windowsBuild": "10.0.26200"
+  },
+  "uninstallKey": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Doubao",
+  "displayNames": [
+    "Doubao",
+    "\u8c46\u5305"
+  ],
+  "publisher": "Beijing Chuntian Zhiyun Technology Co., Ltd.",
+  "installRootRelativeToLocalAppData": "Doubao",
+  "launcherRelativePath": "Application\\Doubao.exe",
+  "mainRelativePath": "Application\\app\\Doubao.exe",
+  "launcherProductName": "Doubao Launcher",
+  "mainProductName": "Doubao",
+  "signer": {
+    "subjectContains": "SERIALNUMBER=91110102MACQD9K640",
+    "thumbprints": [
+      "5D37C15025DAF2656F152207714B7FA36753540A"
+    ]
+  },
+  "allowedPageUrls": [
+    "chrome://doubao-chat/chat",
+    "doubao://doubao-chat/chat",
+    "https://www.doubao.com/chat/"
+  ]
+}

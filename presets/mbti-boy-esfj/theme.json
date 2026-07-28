@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-esfj",
+  "name": "ESFJ · 执政官男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(241, 244, 247, 0.66)",
+    "menu": "rgba(241, 244, 247, 0.94)"
+  },
+  "decoration": {
+    "title": "ESFJ",
+    "subtitle": "执政官",
+    "lines": [
+      "热心周到",
+      "重视关系",
+      "乐于助人"
+    ]
+  },
+  "composer": {
+    "text": "#2d3c4d",
+    "placeholder": "#6f8091",
+    "toolbar": "#3d4f63",
+    "iconFilter": "brightness(0%) saturate(100%) invert(56%) sepia(42%) saturate(631%) hue-rotate(171deg) brightness(34%) contrast(69%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(108, 134, 165, .28)"
+  },
+  "typography": {
+    "primary": "#2d3c4d",
+    "secondary": "#4a5a6b",
+    "muted": "#6f8091",
+    "subtle": "rgba(111, 128, 145, 0.72)",
+    "disabled": "rgba(111, 128, 145, 0.44)",
+    "heading": "#334356",
+    "sidebar": "#2d3c4d",
+    "sidebarMuted": "#6f8091",
+    "suggestion": "#38495d",
+    "action": "#3d4f63",
+    "link": "#526780"
+  },
+  "colors": {
+    "accent": "#6c86a5",
+    "accentSoft": "#8fa4ba",
+    "cyan": "#ad7c84",
+    "pink": "#c4a05f",
+    "text": "#2d3c4d",
+    "muted": "#6f8091",
+    "panel": "rgba(241, 244, 247, 0.64)",
+    "panelStrong": "rgba(241, 244, 247, 0.84)",
+    "line": "rgba(108, 134, 165, .28)"
+  }
+}

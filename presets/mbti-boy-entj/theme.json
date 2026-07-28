@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-entj",
+  "name": "ENTJ · 指挥官男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(48, 41, 54, 0.76)",
+    "menu": "rgba(48, 41, 54, 0.96)"
+  },
+  "decoration": {
+    "title": "ENTJ",
+    "subtitle": "指挥官",
+    "lines": [
+      "目标明确",
+      "果断自信",
+      "善于统筹"
+    ]
+  },
+  "composer": {
+    "text": "#f1ebf3",
+    "placeholder": "#b3a6b7",
+    "toolbar": "#e3d8e7",
+    "iconFilter": "brightness(0%) saturate(100%) invert(76%) sepia(42%) saturate(1696%) hue-rotate(-165deg) brightness(135%) contrast(81%)",
+    "background": "rgba(48, 41, 54, 0.72)",
+    "backgroundAccent": "rgba(48, 41, 54, 0.72)",
+    "border": "rgba(141, 111, 159, .30)"
+  },
+  "typography": {
+    "primary": "#f1ebf3",
+    "secondary": "#d6cdd9",
+    "muted": "#b3a6b7",
+    "subtle": "rgba(179, 166, 183, 0.72)",
+    "disabled": "rgba(179, 166, 183, 0.44)",
+    "heading": "#f1ebf3",
+    "sidebar": "#f1ebf3",
+    "sidebarMuted": "#b3a6b7",
+    "suggestion": "#ddd5e0",
+    "action": "#e3d8e7",
+    "link": "#b195bd"
+  },
+  "colors": {
+    "accent": "#8d6f9f",
+    "accentSoft": "#b195bd",
+    "cyan": "#a1616d",
+    "pink": "#c1a06a",
+    "text": "#f1ebf3",
+    "muted": "#b3a6b7",
+    "panel": "rgba(48, 41, 54, 0.72)",
+    "panelStrong": "rgba(58, 49, 66, 0.88)",
+    "line": "rgba(141, 111, 159, .30)"
+  }
+}

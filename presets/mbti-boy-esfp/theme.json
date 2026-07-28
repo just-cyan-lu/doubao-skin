@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-esfp",
+  "name": "ESFP · 表演者男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(244, 238, 227, 0.66)",
+    "menu": "rgba(244, 238, 227, 0.94)"
+  },
+  "decoration": {
+    "title": "ESFP",
+    "subtitle": "表演者",
+    "lines": [
+      "活力四射",
+      "享受当下",
+      "感染他人"
+    ]
+  },
+  "composer": {
+    "text": "#3d3427",
+    "placeholder": "#796e5e",
+    "toolbar": "#58462f",
+    "iconFilter": "brightness(0%) saturate(100%) invert(43%) sepia(12%) saturate(4172%) hue-rotate(0deg) brightness(34%) contrast(63%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(167, 123, 72, .28)"
+  },
+  "typography": {
+    "primary": "#3d3427",
+    "secondary": "#574e3f",
+    "muted": "#796e5e",
+    "subtle": "rgba(121, 110, 94, 0.72)",
+    "disabled": "rgba(121, 110, 94, 0.44)",
+    "heading": "#483b2a",
+    "sidebar": "#3d3427",
+    "sidebarMuted": "#796e5e",
+    "suggestion": "#50412d",
+    "action": "#58462f",
+    "link": "#7a5d3a"
+  },
+  "colors": {
+    "accent": "#a77b48",
+    "accentSoft": "#bf9966",
+    "cyan": "#b67967",
+    "pink": "#837396",
+    "text": "#3d3427",
+    "muted": "#796e5e",
+    "panel": "rgba(244, 238, 227, 0.64)",
+    "panelStrong": "rgba(244, 238, 227, 0.84)",
+    "line": "rgba(167, 123, 72, .28)"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-estj",
+  "name": "ESTJ · 总经理男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(238, 241, 243, 0.66)",
+    "menu": "rgba(238, 241, 243, 0.94)"
+  },
+  "decoration": {
+    "title": "ESTJ",
+    "subtitle": "总经理",
+    "lines": [
+      "务实高效",
+      "重视秩序",
+      "执行有力"
+    ]
+  },
+  "composer": {
+    "text": "#283440",
+    "placeholder": "#657482",
+    "toolbar": "#334250",
+    "iconFilter": "brightness(0%) saturate(100%) invert(13%) sepia(63%) saturate(400%) hue-rotate(168deg) brightness(105%) contrast(74%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(83, 106, 128, .28)"
+  },
+  "typography": {
+    "primary": "#283440",
+    "secondary": "#43505d",
+    "muted": "#657482",
+    "subtle": "rgba(101, 116, 130, 0.72)",
+    "disabled": "rgba(101, 116, 130, 0.44)",
+    "heading": "#2c3946",
+    "sidebar": "#283440",
+    "sidebarMuted": "#657482",
+    "suggestion": "#303e4c",
+    "action": "#334250",
+    "link": "#415365"
+  },
+  "colors": {
+    "accent": "#536a80",
+    "accentSoft": "#71889c",
+    "cyan": "#7c8791",
+    "pink": "#aa8b57",
+    "text": "#283440",
+    "muted": "#657482",
+    "panel": "rgba(238, 241, 243, 0.64)",
+    "panelStrong": "rgba(238, 241, 243, 0.84)",
+    "line": "rgba(83, 106, 128, .28)"
+  }
+}

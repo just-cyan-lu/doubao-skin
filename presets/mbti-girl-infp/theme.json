@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-infp",
+  "name": "INFP · 调停者女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(243, 239, 229, 0.66)",
+    "menu": "rgba(243, 239, 229, 0.94)"
+  },
+  "decoration": {
+    "title": "INFP",
+    "subtitle": "调停者",
+    "lines": [
+      "内心丰富",
+      "敏感善良",
+      "追求真理"
+    ]
+  },
+  "composer": {
+    "text": "#344339",
+    "placeholder": "#718071",
+    "toolbar": "#455649",
+    "iconFilter": "brightness(0%) saturate(100%) invert(12%) sepia(10%) saturate(3500%) hue-rotate(82deg) brightness(95%) contrast(47%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(112, 132, 108, .26)"
+  },
+  "typography": {
+    "primary": "#344339",
+    "secondary": "#4f5e52",
+    "muted": "#718071",
+    "subtle": "rgba(113, 128, 113, 0.72)",
+    "disabled": "rgba(113, 128, 113, 0.44)",
+    "heading": "#3b4a3f",
+    "sidebar": "#344339",
+    "sidebarMuted": "#718071",
+    "suggestion": "#405044",
+    "action": "#455649",
+    "link": "#5b6e5d"
+  },
+  "colors": {
+    "accent": "#788d77",
+    "accentSoft": "#9aaa8d",
+    "cyan": "#83a8aa",
+    "pink": "#c3a466",
+    "text": "#344339",
+    "muted": "#718071",
+    "panel": "rgba(243, 239, 229, 0.64)",
+    "panelStrong": "rgba(243, 239, 229, 0.84)",
+    "line": "rgba(112, 132, 108, .26)"
+  }
+}

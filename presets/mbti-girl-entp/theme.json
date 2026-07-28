@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-entp",
+  "name": "ENTP · 辩论家女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(239, 235, 242, 0.66)",
+    "menu": "rgba(239, 235, 242, 0.94)"
+  },
+  "decoration": {
+    "title": "ENTP",
+    "subtitle": "辩论家",
+    "lines": [
+      "思维敏捷",
+      "勇于质疑",
+      "点子丰富"
+    ]
+  },
+  "composer": {
+    "text": "#302a3b",
+    "placeholder": "#746c7d",
+    "toolbar": "#413750",
+    "iconFilter": "brightness(0%) saturate(100%) invert(47%) sepia(58%) saturate(4924%) hue-rotate(-120deg) brightness(23%) contrast(68%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(114, 95, 142, .28)"
+  },
+  "typography": {
+    "primary": "#302a3b",
+    "secondary": "#4e4758",
+    "muted": "#746c7d",
+    "subtle": "rgba(116, 108, 125, 0.72)",
+    "disabled": "rgba(116, 108, 125, 0.44)",
+    "heading": "#372f43",
+    "sidebar": "#302a3b",
+    "sidebarMuted": "#746c7d",
+    "suggestion": "#3c344a",
+    "action": "#413750",
+    "link": "#56496b"
+  },
+  "colors": {
+    "accent": "#725f8e",
+    "accentSoft": "#9884ab",
+    "cyan": "#6f879a",
+    "pink": "#b08772",
+    "text": "#302a3b",
+    "muted": "#746c7d",
+    "panel": "rgba(239, 235, 242, 0.64)",
+    "panelStrong": "rgba(239, 235, 242, 0.84)",
+    "line": "rgba(114, 95, 142, .28)"
+  }
+}

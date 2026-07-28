@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-intj",
+  "name": "INTJ · 建筑师男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(44, 41, 54, 0.76)",
+    "menu": "rgba(44, 41, 54, 0.96)"
+  },
+  "decoration": {
+    "title": "INTJ",
+    "subtitle": "建筑师",
+    "lines": [
+      "独立思考",
+      "长远规划",
+      "追求卓越"
+    ]
+  },
+  "composer": {
+    "text": "#edeaf2",
+    "placeholder": "#aaa3b7",
+    "toolbar": "#dbd5e3",
+    "iconFilter": "brightness(0%) saturate(100%) invert(72%) sepia(1%) saturate(1151%) hue-rotate(-136deg) brightness(110%) contrast(117%)",
+    "background": "rgba(44, 41, 54, 0.72)",
+    "backgroundAccent": "rgba(44, 41, 54, 0.72)",
+    "border": "rgba(116, 104, 143, .30)"
+  },
+  "typography": {
+    "primary": "#edeaf2",
+    "secondary": "#d0cbd8",
+    "muted": "#aaa3b7",
+    "subtle": "rgba(170, 163, 183, 0.72)",
+    "disabled": "rgba(170, 163, 183, 0.44)",
+    "heading": "#edeaf2",
+    "sidebar": "#edeaf2",
+    "sidebarMuted": "#aaa3b7",
+    "suggestion": "#d8d3df",
+    "action": "#dbd5e3",
+    "link": "#9b8cb0"
+  },
+  "colors": {
+    "accent": "#74688f",
+    "accentSoft": "#9b8cb0",
+    "cyan": "#56677e",
+    "pink": "#a48b64",
+    "text": "#edeaf2",
+    "muted": "#aaa3b7",
+    "panel": "rgba(44, 41, 54, 0.72)",
+    "panelStrong": "rgba(55, 50, 68, 0.88)",
+    "line": "rgba(116, 104, 143, .30)"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "cyan-sunny",
+  "name": "陆思源 · 暖阳书房",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(250, 245, 237, 0.66)",
+    "menu": "rgba(252, 248, 242, 0.95)"
+  },
+  "decoration": {
+    "title": "陆思源",
+    "subtitle": "SUNSHINE",
+    "lines": [
+      "慢半拍没关系",
+      "温柔总会先一步到达",
+      "慢一点，也会稳稳接住你"
+    ]
+  },
+  "composer": {
+    "text": "#4b3728",
+    "placeholder": "#8a7767",
+    "toolbar": "#8b5e3c",
+    "iconFilter": "brightness(0%) saturate(100%) invert(16%) sepia(45%) saturate(3836%) hue-rotate(23deg) brightness(137%) contrast(53%)",
+    "background": "rgba(255, 252, 247, 0.58)",
+    "backgroundAccent": "rgba(255, 252, 247, 0.58)",
+    "border": "rgba(139, 94, 60, 0.18)"
+  },
+  "typography": {
+    "primary": "#4b3728",
+    "secondary": "#6b5849",
+    "muted": "#857466",
+    "subtle": "rgba(107, 88, 73, 0.58)",
+    "disabled": "rgba(107, 88, 73, 0.36)",
+    "heading": "#3f2d21",
+    "sidebar": "#574132",
+    "sidebarMuted": "#857466",
+    "suggestion": "#654a37",
+    "action": "#8b5e3c",
+    "link": "#9a633b"
+  },
+  "colors": {
+    "accent": "#a56f43",
+    "accentSoft": "#d8b895",
+    "cyan": "#78aeb7",
+    "pink": "#e0aa91",
+    "text": "#4b3728",
+    "muted": "#857466",
+    "panel": "rgba(250, 246, 239, 0.64)",
+    "panelStrong": "rgba(253, 249, 243, 0.86)",
+    "line": "rgba(139, 94, 60, 0.18)"
+  }
+}

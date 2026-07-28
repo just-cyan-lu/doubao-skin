@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-infj",
+  "name": "INFJ · 提倡者男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(238, 240, 232, 0.66)",
+    "menu": "rgba(238, 240, 232, 0.94)"
+  },
+  "decoration": {
+    "title": "INFJ",
+    "subtitle": "提倡者",
+    "lines": [
+      "洞察深刻",
+      "坚持理想",
+      "温柔坚定"
+    ]
+  },
+  "composer": {
+    "text": "#24352f",
+    "placeholder": "#66786f",
+    "toolbar": "#30433c",
+    "iconFilter": "brightness(0%) saturate(100%) invert(69%) sepia(44%) saturate(547%) hue-rotate(106deg) brightness(17%) contrast(68%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(84, 110, 99, .28)"
+  },
+  "typography": {
+    "primary": "#24352f",
+    "secondary": "#41524b",
+    "muted": "#66786f",
+    "subtle": "rgba(102, 120, 111, 0.72)",
+    "disabled": "rgba(102, 120, 111, 0.44)",
+    "heading": "#293b34",
+    "sidebar": "#24352f",
+    "sidebarMuted": "#66786f",
+    "suggestion": "#2d3f38",
+    "action": "#30433c",
+    "link": "#40564d"
+  },
+  "colors": {
+    "accent": "#546e63",
+    "accentSoft": "#7e9187",
+    "cyan": "#b59a65",
+    "pink": "#7c8f77",
+    "text": "#24352f",
+    "muted": "#66786f",
+    "panel": "rgba(238, 240, 232, 0.64)",
+    "panelStrong": "rgba(238, 240, 232, 0.84)",
+    "line": "rgba(84, 110, 99, .28)"
+  }
+}

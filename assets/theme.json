@@ -1,0 +1,21 @@
+{
+  "$schema": "./theme.schema.json",
+  "schemaVersion": 1,
+  "id": "aurora-glass",
+  "name": "Aurora Glass",
+  "surfaces": {
+    "conversation": "rgba(250, 250, 252, 0.66)",
+    "menu": "rgba(255, 255, 255, 0.94)"
+  },
+  "colors": {
+    "accent": "#6d5dfc",
+    "accentSoft": "#a78bfa",
+    "cyan": "#47b8ff",
+    "pink": "#f29bc2",
+    "text": "#252338",
+    "muted": "#6d6981",
+    "panel": "rgba(255, 255, 255, 0.64)",
+    "panelStrong": "rgba(255, 255, 255, 0.84)",
+    "line": "rgba(79, 70, 130, 0.13)"
+  }
+}

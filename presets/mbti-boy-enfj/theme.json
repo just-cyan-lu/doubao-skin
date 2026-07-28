@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-enfj",
+  "name": "ENFJ · 主人公男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(236, 232, 217, 0.66)",
+    "menu": "rgba(236, 232, 217, 0.94)"
+  },
+  "decoration": {
+    "title": "ENFJ",
+    "subtitle": "主人公",
+    "lines": [
+      "热情真诚",
+      "善于共情",
+      "鼓舞他人"
+    ]
+  },
+  "composer": {
+    "text": "#28372d",
+    "placeholder": "#677368",
+    "toolbar": "#37473b",
+    "iconFilter": "brightness(0%) saturate(100%) invert(40%) sepia(99%) saturate(530%) hue-rotate(86deg) brightness(17%) contrast(57%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(99, 120, 100, .28)"
+  },
+  "typography": {
+    "primary": "#28372d",
+    "secondary": "#445147",
+    "muted": "#677368",
+    "subtle": "rgba(103, 115, 104, 0.72)",
+    "disabled": "rgba(103, 115, 104, 0.44)",
+    "heading": "#2e3e33",
+    "sidebar": "#28372d",
+    "sidebarMuted": "#677368",
+    "suggestion": "#334337",
+    "action": "#37473b",
+    "link": "#4a5d4d"
+  },
+  "colors": {
+    "accent": "#637864",
+    "accentSoft": "#879481",
+    "cyan": "#b18b55",
+    "pink": "#8d6a3f",
+    "text": "#28372d",
+    "muted": "#677368",
+    "panel": "rgba(236, 232, 217, 0.64)",
+    "panelStrong": "rgba(236, 232, 217, 0.84)",
+    "line": "rgba(99, 120, 100, .28)"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-intp",
+  "name": "INTP · 逻辑学家女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(238, 240, 243, 0.66)",
+    "menu": "rgba(238, 240, 243, 0.94)"
+  },
+  "decoration": {
+    "title": "INTP",
+    "subtitle": "逻辑学家",
+    "lines": [
+      "好奇理性",
+      "热爱分析",
+      "探索本质"
+    ]
+  },
+  "composer": {
+    "text": "#2d303b",
+    "placeholder": "#717481",
+    "toolbar": "#3e3f50",
+    "iconFilter": "brightness(0%) saturate(100%) invert(15%) sepia(94%) saturate(2532%) hue-rotate(-126deg) brightness(24%) contrast(56%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(113, 106, 141, .28)"
+  },
+  "typography": {
+    "primary": "#2d303b",
+    "secondary": "#4b4e5a",
+    "muted": "#717481",
+    "subtle": "rgba(113, 116, 129, 0.72)",
+    "disabled": "rgba(113, 116, 129, 0.44)",
+    "heading": "#343643",
+    "sidebar": "#2d303b",
+    "sidebarMuted": "#717481",
+    "suggestion": "#393a4a",
+    "action": "#3e3f50",
+    "link": "#54526b"
+  },
+  "colors": {
+    "accent": "#716a8d",
+    "accentSoft": "#958da7",
+    "cyan": "#668b91",
+    "pink": "#ad8f71",
+    "text": "#2d303b",
+    "muted": "#717481",
+    "panel": "rgba(238, 240, 243, 0.64)",
+    "panelStrong": "rgba(238, 240, 243, 0.84)",
+    "line": "rgba(113, 106, 141, .28)"
+  }
+}

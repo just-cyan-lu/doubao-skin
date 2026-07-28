@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-isfp",
+  "name": "ISFP · 探险家男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(244, 238, 225, 0.66)",
+    "menu": "rgba(244, 238, 225, 0.94)"
+  },
+  "decoration": {
+    "title": "ISFP",
+    "subtitle": "探险家",
+    "lines": [
+      "温柔随性",
+      "感受细腻",
+      "热爱美好"
+    ]
+  },
+  "composer": {
+    "text": "#3b342a",
+    "placeholder": "#7d7162",
+    "toolbar": "#554633",
+    "iconFilter": "brightness(0%) saturate(100%) invert(77%) sepia(30%) saturate(2953%) hue-rotate(-25deg) brightness(25%) contrast(66%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(161, 123, 79, .28)"
+  },
+  "typography": {
+    "primary": "#3b342a",
+    "secondary": "#584f43",
+    "muted": "#7d7162",
+    "subtle": "rgba(125, 113, 98, 0.72)",
+    "disabled": "rgba(125, 113, 98, 0.44)",
+    "heading": "#453b2e",
+    "sidebar": "#3b342a",
+    "sidebarMuted": "#7d7162",
+    "suggestion": "#4d4131",
+    "action": "#554633",
+    "link": "#765d3f"
+  },
+  "colors": {
+    "accent": "#a17b4f",
+    "accentSoft": "#bb966b",
+    "cyan": "#728776",
+    "pink": "#7f95a1",
+    "text": "#3b342a",
+    "muted": "#7d7162",
+    "panel": "rgba(244, 238, 225, 0.64)",
+    "panelStrong": "rgba(244, 238, 225, 0.84)",
+    "line": "rgba(161, 123, 79, .28)"
+  }
+}

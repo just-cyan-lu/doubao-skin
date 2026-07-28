@@ -1,0 +1,714 @@
+:root[data-doubao-skin="active"] {
+  color-scheme: light;
+  --doubao-skin-accent: #6d5dfc;
+  --doubao-skin-accent-soft: #a78bfa;
+  --doubao-skin-cyan: #47b8ff;
+  --doubao-skin-pink: #f29bc2;
+  --doubao-skin-text: #252338;
+  --doubao-skin-muted: #6d6981;
+  --doubao-skin-panel: rgba(255, 255, 255, 0.64);
+  --doubao-skin-panel-strong: rgba(255, 255, 255, 0.84);
+  --doubao-skin-line: rgba(79, 70, 130, 0.13);
+  --doubao-skin-conversation-scrim: rgba(255, 255, 255, 0.66);
+  --doubao-skin-menu-background: rgba(255, 255, 255, 0.94);
+  --doubao-skin-text-primary: #252338;
+  --doubao-skin-text-secondary: #57546a;
+  --doubao-skin-text-muted: #6d6981;
+  --doubao-skin-text-subtle: rgba(109, 105, 129, 0.58);
+  --doubao-skin-text-disabled: rgba(109, 105, 129, 0.36);
+  --doubao-skin-text-heading: #252338;
+  --doubao-skin-text-sidebar: #252338;
+  --doubao-skin-text-sidebar-muted: #6d6981;
+  --doubao-skin-text-suggestion: #353249;
+  --doubao-skin-text-action: #353249;
+  --doubao-skin-text-link: #5c50d8;
+  --doubao-skin-composer-text: #252338;
+  --doubao-skin-composer-placeholder: #6d6981;
+  --doubao-skin-composer-toolbar: #252338;
+  --doubao-skin-composer-icon-filter: brightness(0%) saturate(100%) invert(16%)
+    sepia(56%) saturate(3503%) hue-rotate(-121deg) brightness(22%) contrast(79%);
+  --doubao-skin-composer-background: rgba(255, 255, 255, 0.58);
+  --doubao-skin-composer-background-accent: rgba(255, 255, 255, 0.58);
+  --doubao-skin-composer-border: rgba(78, 85, 78, 0.16);
+  --doubao-skin-shadow: 0 18px 60px rgba(72, 57, 132, 0.13);
+  --doubao-skin-shadow-soft: 0 8px 28px rgba(72, 57, 132, 0.09);
+
+  /* Doubao design tokens inherited by most of the native web UI. */
+  --dbx-bg-body: transparent;
+  --dbx-bg-base-web: var(--doubao-skin-panel);
+  --dbx-bg-float: var(--doubao-skin-panel-strong);
+  --s-color-bg-body: transparent;
+
+  /*
+   * Bridge the skin's semantic typography palette into Doubao's current
+   * native token families. Keep this mapping centralized: selectors below
+   * are only for UI regions that intentionally need a distinct semantic role.
+   */
+  --s-color-text-primary: var(--doubao-skin-text-primary);
+  --s-color-text-secondary: var(--doubao-skin-text-secondary);
+  --s-color-text-tertiary: var(--doubao-skin-text-muted);
+  --s-color-text-quaternary: var(--doubao-skin-text-subtle);
+  --s-color-text-disable: var(--doubao-skin-text-disabled);
+  --s-color-text-link: var(--doubao-skin-text-link);
+  --dbx-text-primary: var(--doubao-skin-text-primary);
+  --dbx-text-secondary: var(--doubao-skin-text-secondary);
+  --dbx-text-tertiary: var(--doubao-skin-text-muted);
+  --dbx-text-quaternary: var(--doubao-skin-text-subtle);
+  --dbx-text-disable: var(--doubao-skin-text-disabled);
+  --dbx-text-markdown: var(--doubao-skin-text-primary);
+  --color-dbx-text-primary: var(--doubao-skin-text-primary);
+  --color-dbx-text-secondary: var(--doubao-skin-text-secondary);
+  --color-dbx-text-tertiary: var(--doubao-skin-text-muted);
+  --semi-color-text-0: var(--doubao-skin-text-primary);
+  --semi-color-text-1: var(--doubao-skin-text-secondary);
+  --semi-color-text-2: var(--doubao-skin-text-muted);
+  --semi-color-text-3: var(--doubao-skin-text-subtle);
+  --semi-color-disabled-text: var(--doubao-skin-text-disabled);
+  --md-box-global-text-color: var(--doubao-skin-text-primary);
+  --md-box-samantha-normal-text-color: var(--doubao-skin-text-primary);
+  --g-msg-bubble-text: var(--doubao-skin-text-primary);
+  --g-send-msg-bubble-text: var(--doubao-skin-text-primary);
+  --color-g-send-msg-bubble-text: var(--doubao-skin-text-primary);
+  --color-link-text: var(--doubao-skin-text-link);
+  --color-link-text-hover: var(--doubao-skin-accent);
+  --text-color-primary: var(--doubao-skin-text-primary);
+  --text-color-secondary: var(--doubao-skin-text-secondary);
+  --normal-text: var(--doubao-skin-text-primary);
+}
+
+:root[data-doubao-skin="active"],
+:root[data-doubao-skin="active"] body,
+:root[data-doubao-skin="active"] #root {
+  min-height: 100%;
+  background: transparent !important;
+}
+
+:root[data-doubao-skin="active"] body {
+  isolation: isolate;
+  color: var(--doubao-skin-text-primary);
+}
+
+:root[data-doubao-skin="active"] body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  display: block;
+  content: "";
+  background-image: var(--doubao-skin-background-image);
+  background-position: center;
+  background-size: cover;
+  transform: scale(1.012);
+  pointer-events: none;
+}
+
+:root[data-doubao-skin="active"] body::after {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  content: "";
+  opacity: 0.48;
+  background-image:
+    linear-gradient(rgba(109, 93, 252, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(109, 93, 252, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.62), transparent 72%);
+  pointer-events: none;
+}
+
+:root[data-doubao-skin-theme^="mbti-"] body::after {
+  opacity: 0.3;
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--doubao-skin-panel) 0%,
+      var(--doubao-skin-panel-strong) 48%,
+      transparent 78%
+    );
+  background-size: auto;
+  mask-image: none;
+}
+
+:root[data-doubao-skin-theme^="mbti-"] body::before {
+  background-color: var(--doubao-skin-panel);
+  background-position: 76% 18%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: none;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat-route-layout"] {
+  color: var(--doubao-skin-text-primary);
+  background-color: transparent !important;
+  background-image: var(--doubao-skin-background-image) !important;
+  background-position: center !important;
+  background-size: cover !important;
+}
+
+:root[data-doubao-skin-theme^="mbti-"] [data-testid="chat-route-layout"] {
+  background-color: var(--doubao-skin-panel) !important;
+  background-position: 76% 18% !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+:root[data-doubao-skin-theme="cyan-sunny"] body::after {
+  opacity: 0.3;
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--doubao-skin-panel) 0%,
+      var(--doubao-skin-panel-strong) 48%,
+      transparent 78%
+    );
+  background-size: auto;
+  mask-image: none;
+}
+
+:root[data-doubao-skin-theme="cyan-sunny"] body::before {
+  background-color: var(--doubao-skin-panel);
+  background-position: 72% 45%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: none;
+}
+
+:root[data-doubao-skin-theme="cyan-sunny"]
+  [data-testid="chat-route-layout"] {
+  background-color: var(--doubao-skin-panel) !important;
+  background-position: 72% 45% !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+:root:is(
+  [data-doubao-skin-theme="mbti-boy-entj"],
+  [data-doubao-skin-theme="mbti-boy-istj"],
+  [data-doubao-skin-theme="mbti-girl-esfj"],
+  [data-doubao-skin-theme="mbti-girl-esfp"],
+  [data-doubao-skin-theme="mbti-girl-estj"],
+  [data-doubao-skin-theme="mbti-girl-isfj"]
+) body::before,
+:root:is(
+  [data-doubao-skin-theme="mbti-boy-entj"],
+  [data-doubao-skin-theme="mbti-boy-istj"],
+  [data-doubao-skin-theme="mbti-girl-esfj"],
+  [data-doubao-skin-theme="mbti-girl-esfp"],
+  [data-doubao-skin-theme="mbti-girl-estj"],
+  [data-doubao-skin-theme="mbti-girl-isfj"]
+) [data-testid="chat-route-layout"] {
+  background-position: 76% 10% !important;
+}
+
+:root[data-doubao-skin-theme="mbti-boy-entp"] body::before,
+:root[data-doubao-skin-theme="mbti-boy-entp"]
+  [data-testid="chat-route-layout"] {
+  background-position: 76% 2% !important;
+}
+
+:root[data-doubao-skin-theme="mbti-girl-estp"] body::before,
+:root[data-doubao-skin-theme="mbti-girl-estp"]
+  [data-testid="chat-route-layout"] {
+  background-position: 76% 5% !important;
+}
+
+:root:is(
+  [data-doubao-skin-theme="mbti-boy-entj"],
+  [data-doubao-skin-theme="mbti-girl-entj"],
+  [data-doubao-skin-theme="mbti-boy-estp"],
+  [data-doubao-skin-theme="mbti-girl-estp"],
+  [data-doubao-skin-theme="mbti-boy-intj"],
+  [data-doubao-skin-theme="mbti-girl-intj"],
+  [data-doubao-skin-theme="mbti-boy-istp"],
+  [data-doubao-skin-theme="mbti-girl-istp"]
+) {
+  color-scheme: dark;
+}
+
+#doubao-skin-poc-decoration {
+  position: fixed;
+  top: clamp(78px, 9vh, 112px);
+  left: clamp(270px, 21vw, 350px);
+  z-index: 1;
+  display: none;
+  width: max-content;
+  max-width: 150px;
+  flex-direction: column;
+  color: var(--doubao-skin-accent);
+  font-family: "Songti SC", "STSong", "Iowan Old Style", Baskerville, serif;
+  line-height: 1.3;
+  text-align: left;
+  text-shadow:
+    0 1px 0 var(--doubao-skin-panel-strong),
+    0 2px 14px var(--doubao-skin-panel-strong);
+  filter: drop-shadow(0 7px 18px rgba(66, 83, 60, 0.08));
+  pointer-events: none;
+  user-select: none;
+}
+
+:root[data-doubao-skin-theme^="mbti-"]
+  body:has([data-testid="flow_chat_guidance_page"])
+  #doubao-skin-poc-decoration {
+  display: flex;
+}
+
+:root[data-doubao-skin-theme="cyan-sunny"]
+  body:has([data-testid="flow_chat_guidance_page"])
+  #doubao-skin-poc-decoration {
+  display: flex;
+}
+
+#doubao-skin-poc-decoration .doubao-skin-decoration-title {
+  margin: 0 0 5px;
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: 33px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+#doubao-skin-poc-decoration .doubao-skin-decoration-subtitle {
+  margin-bottom: 13px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+}
+
+#doubao-skin-poc-decoration .doubao-skin-decoration-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+#doubao-skin-poc-decoration .doubao-skin-decoration-lines > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+#doubao-skin-poc-decoration .doubao-skin-decoration-lines > span::before {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--doubao-skin-accent-soft);
+  content: "";
+}
+
+:root[data-doubao-skin="active"] [data-testid="flow_chat_guidance_page"],
+:root[data-doubao-skin="active"] [class*="main-with-nav-"],
+:root[data-doubao-skin="active"] [class*="center-bg-"] {
+  background: transparent !important;
+}
+
+/*
+ * Conversation routes need a readability layer between wallpaper and
+ * messages. The stable message-list anchor scopes this to real conversations,
+ * leaving the artwork fully visible on the home guidance page.
+ */
+:root[data-doubao-skin="active"] main:has([data-testid="message-list"]) {
+  background: var(--doubao-skin-conversation-scrim) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/*
+ * Doubao adds an opaque white fade immediately above the composer. Rebuild it
+ * from the conversation scrim so the bottom edge stays continuous instead of
+ * producing a detached white strip.
+ */
+:root[data-doubao-skin="active"]
+  main:has([data-testid="message-list"])
+  [class*="from-s-color-bg-body"] {
+  background:
+    linear-gradient(
+      to top,
+      color-mix(
+        in srgb,
+        var(--doubao-skin-conversation-scrim) 48%,
+        transparent
+      ),
+      transparent
+    ) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_route_layout_leftside_nav"] {
+  color: var(--doubao-skin-text-sidebar);
+  border-right-color: var(--doubao-skin-line) !important;
+  background: color-mix(in srgb, var(--doubao-skin-panel) 88%, transparent) !important;
+  box-shadow: 16px 0 44px rgba(72, 57, 132, 0.07);
+  -webkit-backdrop-filter: blur(26px) saturate(1.22);
+  backdrop-filter: blur(26px) saturate(1.22);
+}
+
+:root[data-doubao-skin="active"] [data-testid="flow_chat_sidebar"] {
+  color: var(--doubao-skin-text-sidebar);
+  background: transparent !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="flow_chat_sidebar"]
+  :where(a, button, [role="button"], [role="link"]) {
+  color: var(--doubao-skin-text-sidebar) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="flow_chat_sidebar"]
+  [data-testid="chat_list_item_title"] {
+  color: var(--doubao-skin-text-sidebar) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_route_layout_leftside_nav"]
+  :where(input, textarea) {
+  color: var(--doubao-skin-text-sidebar) !important;
+  caret-color: var(--doubao-skin-accent);
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_route_layout_leftside_nav"]
+  :where(input, textarea)::placeholder {
+  color: var(--doubao-skin-text-sidebar-muted) !important;
+  opacity: 1;
+}
+
+/*
+ * Some conversation widgets ship local black text/icon declarations instead
+ * of consuming Doubao's semantic tokens. Anchor their stable testids so
+ * message copy, follow-up suggestions, and action icons remain in the preset
+ * palette without broadly recoloring embedded media.
+ */
+:root[data-doubao-skin="active"] [data-testid="message_content"] {
+  color: var(--doubao-skin-text-primary) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="message_content"]
+  :where(p, span):not([role="img"]) {
+  color: inherit !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="suggest_message_item"] {
+  color: var(--doubao-skin-text-suggestion) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="suggest_message_item"]
+  :where(span, svg),
+:root[data-doubao-skin="active"] [data-testid="message_action_bar"]
+  :where(button, span, svg),
+:root[data-doubao-skin="active"] [data-testid="carousel-item"]
+  [role="img"] {
+  color: var(--doubao-skin-text-action) !important;
+}
+
+:root[data-doubao-skin="active"]
+  :where(button:disabled, [aria-disabled="true"], [data-disabled]) {
+  color: var(--doubao-skin-text-disabled) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"] {
+  color: var(--doubao-skin-composer-toolbar) !important;
+  border: 1px solid var(--doubao-skin-composer-border);
+  border-radius: 24px !important;
+  background:
+    linear-gradient(
+      135deg,
+      var(--doubao-skin-composer-background),
+      var(--doubao-skin-composer-background-accent)
+    ) !important;
+  box-shadow:
+    0 18px 60px color-mix(
+      in srgb,
+      var(--doubao-skin-composer-border) 48%,
+      transparent
+    ),
+    inset 0 1px 0 color-mix(
+      in srgb,
+      var(--doubao-skin-panel-strong) 76%,
+      transparent
+    );
+  -webkit-backdrop-filter: blur(18px) saturate(1.04);
+  backdrop-filter: blur(18px) saturate(1.04);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+/*
+ * Doubao 2.19.9 places an opaque native surface immediately inside the
+ * stable composer anchor. Clear that surface so the preset-controlled outer
+ * gradient is actually visible; the outer node owns the background, border,
+ * blur, and focus treatment.
+ */
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  > [class*="input-guidance-input-container-background"] {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"]:focus-within {
+  border-color: color-mix(in srgb, var(--doubao-skin-accent) 42%, transparent);
+  box-shadow:
+    0 22px 70px color-mix(in srgb, var(--doubao-skin-accent) 18%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--doubao-skin-accent) 9%, transparent),
+    inset 0 1px 0 color-mix(
+      in srgb,
+      var(--doubao-skin-panel-strong) 82%,
+      transparent
+    );
+  transform: translateY(-1px);
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input_input"] {
+  color: var(--doubao-skin-composer-text) !important;
+  -webkit-text-fill-color: var(--doubao-skin-composer-text) !important;
+  caret-color: var(--doubao-skin-accent);
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input_input"]::placeholder {
+  color: var(--doubao-skin-composer-placeholder) !important;
+  -webkit-text-fill-color: var(--doubao-skin-composer-placeholder) !important;
+  opacity: 1;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  :where(button, [role="button"]) {
+  color: var(--doubao-skin-composer-toolbar) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  :where(button, [role="button"])
+  :where(span, svg) {
+  color: inherit !important;
+}
+
+/*
+ * guidance-skill-bar also wraps the ordinary composer actions in Doubao
+ * 2.19.9. Its generic white button surface must not become a row of pills
+ * inside the composer glass. Keep this selector limited to stable skill
+ * testids so the mode selector ("Quick") and voice button retain their
+ * intentional surfaces.
+ */
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  button[data-testid^="skill_bar_button_"] {
+  color: var(--doubao-skin-composer-toolbar) !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  button[data-testid^="skill_bar_button_"]:hover {
+  color: var(--doubao-skin-accent) !important;
+  background: color-mix(
+    in srgb,
+    var(--doubao-skin-accent-soft) 10%,
+    transparent
+  ) !important;
+}
+
+/*
+ * Doubao's skill-bar and mode-select artwork is delivered as monochrome PNG
+ * <img> elements, so color/currentColor and SVG fill rules cannot reach it.
+ * The filter starts by normalizing each source to black, then maps it to the
+ * preset's toolbar color. Keep this narrowly scoped so avatars and multicolor
+ * artwork retain their native colors.
+ */
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  button[data-testid^="skill_bar_button_"]
+  img[aria-hidden="true"],
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  [data-valid-btn="mode-select-action-btn"]
+  > button
+  > img[alt=""] {
+  filter: var(--doubao-skin-composer-icon-filter) !important;
+}
+
+/*
+ * The mode picker is rendered as a dropdown surface and contains its own PNG
+ * copies. Tint only the four 16px mode glyphs; the 10px blue upgrade badge is
+ * intentionally left untouched.
+ */
+:root[data-doubao-skin="active"]
+  [role="menu"]:has(img[src*="/mode_fast.png"])
+  [role="menuitem"]
+  img.size-16[alt=""] {
+  filter: var(--doubao-skin-composer-icon-filter) !important;
+}
+
+/*
+ * The More popover is a dialog rather than a menu and may move through a
+ * portal. Its three known monochrome action icons need their own narrow rule.
+ */
+:root[data-doubao-skin="active"]
+  [role="dialog"]:has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_1005"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_9"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_11"]
+  )
+  [data-input-engine-action-source="actionbar"]
+  img[aria-hidden="true"] {
+  filter: var(--doubao-skin-composer-icon-filter) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat_input"]
+  :where(button, [role="button"]):hover {
+  color: var(--doubao-skin-accent) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="onboarding_sug_item"] {
+  color: var(--doubao-skin-text-suggestion) !important;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--doubao-skin-panel-strong) 56%,
+    transparent
+  );
+  background: color-mix(in srgb, var(--doubao-skin-panel) 80%, transparent) !important;
+  box-shadow: var(--doubao-skin-shadow-soft);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+:root[data-doubao-skin="active"] [data-testid="onboarding_sug_item"]
+  :where(span, p) {
+  color: inherit !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="onboarding_sug_item"]:hover {
+  border-color: color-mix(in srgb, var(--doubao-skin-accent) 24%, transparent);
+  background: var(--doubao-skin-panel-strong) !important;
+  box-shadow: 0 14px 34px rgba(72, 57, 132, 0.14);
+  transform: translateY(-2px);
+}
+
+:root[data-doubao-skin="active"] [data-testid="create_conversation_button"],
+:root[data-doubao-skin="active"] [data-testid="create_office_task_button"] {
+  border-radius: 12px !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="create_conversation_button"]:hover,
+:root[data-doubao-skin="active"] [data-testid="create_office_task_button"]:hover,
+:root[data-doubao-skin="active"] [data-testid="chat_list_thread_item"]:hover {
+  background: color-mix(in srgb, var(--doubao-skin-accent) 9%, transparent) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="editable_conversation_name"],
+:root[data-doubao-skin="active"] [class*="greeting-text-"] {
+  color: var(--doubao-skin-text-heading) !important;
+  text-shadow: 0 1px 16px var(--doubao-skin-panel-strong);
+}
+
+:root[data-doubao-skin="active"] [data-testid="flow_chat_guidance_page"]
+  [class*="greeting-height"]::after {
+  background: transparent !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="guidance-skill-bar"] button {
+  color: var(--doubao-skin-text-action) !important;
+  border-color: color-mix(in srgb, var(--doubao-skin-accent) 12%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--doubao-skin-panel) 86%,
+    transparent
+  );
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+:root[data-doubao-skin="active"] [data-testid="guidance-skill-bar"] button:hover {
+  color: var(--doubao-skin-accent);
+  background: var(--doubao-skin-panel-strong);
+}
+
+:root[data-doubao-skin="active"] [role="dialog"],
+:root[data-doubao-skin="active"] [role="menu"],
+:root[data-doubao-skin="active"] [data-radix-popper-content-wrapper] > * {
+  color: var(--doubao-skin-text-primary) !important;
+  border-color: var(--doubao-skin-line) !important;
+  background:
+    linear-gradient(
+      145deg,
+      var(--doubao-skin-menu-background),
+      var(--doubao-skin-menu-background)
+    ) !important;
+  box-shadow: var(--doubao-skin-shadow) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+}
+
+/*
+ * guidance-skill-bar styles also reach the portaled More actions and used to
+ * paint three smaller white rectangles over the dialog shell. The shell now
+ * owns one continuous surface; items remain transparent until interaction.
+ */
+:root[data-doubao-skin="active"]
+  [role="dialog"]:has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_1005"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_9"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_11"]
+  )
+  [data-input-engine-action-source="actionbar"] {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-doubao-skin="active"]
+  [role="dialog"]:has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_1005"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_9"]
+  ):has(
+    [data-input-engine-action-source="actionbar"][data-testid="skill_bar_button_11"]
+  )
+  [data-input-engine-action-source="actionbar"]:is(:hover, [data-highlighted]) {
+  background: color-mix(
+    in srgb,
+    var(--doubao-skin-accent-soft) 18%,
+    transparent
+  ) !important;
+}
+
+:root[data-doubao-skin="active"] [role="menu"]
+  [role="menuitem"]:is(:hover, [data-highlighted]) {
+  background: color-mix(
+    in srgb,
+    var(--doubao-skin-accent-soft) 18%,
+    transparent
+  ) !important;
+}
+
+:root[data-doubao-skin="active"] [data-testid="chat-route-layout"] a {
+  color: var(--doubao-skin-text-link);
+}
+
+:root[data-doubao-skin="active"] ::selection {
+  color: var(--doubao-skin-text-heading);
+  background: color-mix(in srgb, var(--doubao-skin-accent-soft) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-doubao-skin="active"] *,
+  :root[data-doubao-skin="active"] *::before,
+  :root[data-doubao-skin="active"] *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1050px), (max-height: 650px) {
+  #doubao-skin-poc-decoration {
+    display: none !important;
+  }
+}

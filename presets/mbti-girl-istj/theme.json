@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-istj",
+  "name": "ISTJ · 物流师女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(237, 240, 242, 0.66)",
+    "menu": "rgba(237, 240, 242, 0.94)"
+  },
+  "decoration": {
+    "title": "ISTJ",
+    "subtitle": "物流师",
+    "lines": [
+      "沉稳负责",
+      "重视规则",
+      "值得信赖"
+    ]
+  },
+  "composer": {
+    "text": "#273342",
+    "placeholder": "#687482",
+    "toolbar": "#323f50",
+    "iconFilter": "brightness(0%) saturate(100%) invert(27%) sepia(94%) saturate(2616%) hue-rotate(-154deg) brightness(19%) contrast(61%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(83, 100, 122, .28)"
+  },
+  "typography": {
+    "primary": "#273342",
+    "secondary": "#44505e",
+    "muted": "#687482",
+    "subtle": "rgba(104, 116, 130, 0.72)",
+    "disabled": "rgba(104, 116, 130, 0.44)",
+    "heading": "#2b3848",
+    "sidebar": "#273342",
+    "sidebarMuted": "#687482",
+    "suggestion": "#2f3c4c",
+    "action": "#323f50",
+    "link": "#414f62"
+  },
+  "colors": {
+    "accent": "#53647a",
+    "accentSoft": "#75859a",
+    "cyan": "#7b8790",
+    "pink": "#9d835b",
+    "text": "#273342",
+    "muted": "#687482",
+    "panel": "rgba(237, 240, 242, 0.64)",
+    "panelStrong": "rgba(237, 240, 242, 0.84)",
+    "line": "rgba(83, 100, 122, .28)"
+  }
+}

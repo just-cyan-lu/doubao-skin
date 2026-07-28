@@ -1,0 +1,32 @@
+{
+  "name": "doubao-skin",
+  "version": "0.8.3",
+  "private": true,
+  "author": "陆思源Cyan",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/just-cyan-lu/doubao-skin.git"
+  },
+  "homepage": "https://github.com/just-cyan-lu/doubao-skin",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/injector.mjs --check",
+    "check:infp": "node scripts/injector.mjs --check --preset mbti-boy-infp",
+    "build:app": "./scripts/build-macos-app.sh",
+    "build:macos": "./scripts/build-macos-app.sh",
+    "build:dmg": "./scripts/build-macos-dmg.sh",
+    "build:icons": "./scripts/build-app-icons.sh",
+    "install:app": "./scripts/install-macos-app.sh",
+    "install:macos": "./scripts/install-macos-app.sh",
+    "build:windows": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-app.ps1",
+    "install:windows": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/install-windows-app.ps1",
+    "icon-filter": "node scripts/generate-icon-filter.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "smoke": "./tests/smoke-headless-macos.sh",
+    "smoke:infp": "DOUBAO_SKIN_SMOKE_PRESET=mbti-boy-infp ./tests/smoke-headless-macos.sh"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

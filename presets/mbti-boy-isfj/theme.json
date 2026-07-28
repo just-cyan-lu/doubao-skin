@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-boy-isfj",
+  "name": "ISFJ · 守卫者男孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(242, 245, 247, 0.66)",
+    "menu": "rgba(242, 245, 247, 0.94)"
+  },
+  "decoration": {
+    "title": "ISFJ",
+    "subtitle": "守卫者",
+    "lines": [
+      "细致可靠",
+      "温暖体贴",
+      "默默守护"
+    ]
+  },
+  "composer": {
+    "text": "#2d3a47",
+    "placeholder": "#71808e",
+    "toolbar": "#3d4d5e",
+    "iconFilter": "brightness(0%) saturate(100%) invert(21%) sepia(38%) saturate(2664%) hue-rotate(-170deg) brightness(48%) contrast(54%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(110, 135, 161, .28)"
+  },
+  "typography": {
+    "primary": "#2d3a47",
+    "secondary": "#4b5966",
+    "muted": "#71808e",
+    "subtle": "rgba(113, 128, 142, 0.72)",
+    "disabled": "rgba(113, 128, 142, 0.44)",
+    "heading": "#344250",
+    "sidebar": "#2d3a47",
+    "sidebarMuted": "#71808e",
+    "suggestion": "#394857",
+    "action": "#3d4d5e",
+    "link": "#53677b"
+  },
+  "colors": {
+    "accent": "#6e87a1",
+    "accentSoft": "#91a6b8",
+    "cyan": "#8da4a0",
+    "pink": "#b89a67",
+    "text": "#2d3a47",
+    "muted": "#71808e",
+    "panel": "rgba(242, 245, 247, 0.64)",
+    "panelStrong": "rgba(242, 245, 247, 0.84)",
+    "line": "rgba(110, 135, 161, .28)"
+  }
+}

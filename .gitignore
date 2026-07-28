@@ -1,0 +1,5 @@
+.DS_Store
+*.log
+screenshots/
+assets/background.*
+dist/

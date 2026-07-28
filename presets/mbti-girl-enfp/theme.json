@@ -1,0 +1,53 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "mbti-girl-enfp",
+  "name": "ENFP · 竞选者女孩",
+  "background": "background.jpg",
+  "surfaces": {
+    "conversation": "rgba(236, 232, 216, 0.66)",
+    "menu": "rgba(236, 232, 216, 0.94)"
+  },
+  "decoration": {
+    "title": "ENFP",
+    "subtitle": "竞选者",
+    "lines": [
+      "充满好奇",
+      "热情自由",
+      "富有创意"
+    ]
+  },
+  "composer": {
+    "text": "#27352d",
+    "placeholder": "#617164",
+    "toolbar": "#39483a",
+    "iconFilter": "brightness(0%) saturate(100%) invert(17%) sepia(20%) saturate(2621%) hue-rotate(80deg) brightness(47%) contrast(57%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(86, 107, 90, .28)"
+  },
+  "typography": {
+    "primary": "#27352d",
+    "secondary": "#414f45",
+    "muted": "#617164",
+    "subtle": "rgba(97, 113, 100, 0.72)",
+    "disabled": "rgba(97, 113, 100, 0.44)",
+    "heading": "#2e3d32",
+    "sidebar": "#27352d",
+    "sidebarMuted": "#617164",
+    "suggestion": "#344337",
+    "action": "#39483a",
+    "link": "#51614c"
+  },
+  "colors": {
+    "accent": "#6f8062",
+    "accentSoft": "#8f9e77",
+    "cyan": "#c48767",
+    "pink": "#b38b4e",
+    "text": "#27352d",
+    "muted": "#617164",
+    "panel": "rgba(236, 232, 216, 0.64)",
+    "panelStrong": "rgba(236, 232, 216, 0.84)",
+    "line": "rgba(86, 107, 90, .28)"
+  }
+}

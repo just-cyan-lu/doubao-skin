@@ -1,0 +1,52 @@
+{
+  "$schema": "../../assets/theme.schema.json",
+  "schemaVersion": 1,
+  "id": "replace-with-theme-id",
+  "name": "Replace with theme name",
+  "surfaces": {
+    "conversation": "rgba(250, 249, 244, 0.66)",
+    "menu": "rgba(252, 251, 247, 0.94)"
+  },
+  "decoration": {
+    "title": "THEME",
+    "subtitle": "副标题",
+    "lines": [
+      "第一行",
+      "第二行",
+      "第三行"
+    ]
+  },
+  "composer": {
+    "text": "#27352d",
+    "placeholder": "#707a73",
+    "toolbar": "#3f5145",
+    "iconFilter": "brightness(0%) saturate(100%) invert(69%) sepia(5%) saturate(5040%) hue-rotate(87deg) brightness(19%) contrast(55%)",
+    "background": "rgba(255, 255, 255, 0.58)",
+    "backgroundAccent": "rgba(255, 255, 255, 0.58)",
+    "border": "rgba(78, 85, 78, 0.16)"
+  },
+  "typography": {
+    "primary": "#2f4036",
+    "secondary": "#526158",
+    "muted": "#737e77",
+    "subtle": "rgba(82, 97, 88, 0.58)",
+    "disabled": "rgba(82, 97, 88, 0.36)",
+    "heading": "#26382e",
+    "sidebar": "#34483b",
+    "sidebarMuted": "#737e77",
+    "suggestion": "#3c5042",
+    "action": "#405647",
+    "link": "#4f705c"
+  },
+  "colors": {
+    "accent": "#657d6b",
+    "accentSoft": "#a8b8aa",
+    "cyan": "#87b8b2",
+    "pink": "#dfb6aa",
+    "text": "#2f4036",
+    "muted": "#737e77",
+    "panel": "rgba(248, 248, 243, 0.64)",
+    "panelStrong": "rgba(252, 251, 247, 0.84)",
+    "line": "rgba(72, 91, 78, 0.16)"
+  }
+}
